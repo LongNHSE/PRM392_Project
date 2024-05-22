@@ -1,11 +1,24 @@
 import { Injectable } from '@nestjs/common';
 import { CreateFoodTypeDto } from './dto/create-food_type.dto';
 import { UpdateFoodTypeDto } from './dto/update-food_type.dto';
+import { InjectModel } from '@nestjs/mongoose';
+import { FoodType } from './schema/food_type.schema';
+import { Model } from 'mongoose';
 
 @Injectable()
 export class FoodTypeService {
-  create(createFoodTypeDto: CreateFoodTypeDto) {
-    return 'This action adds a new foodType';
+  constructor(
+    @InjectModel(FoodType.name) private readonly foodTypeModel: Model<FoodType>,
+  ) {}
+
+  async create(createFoodTypeDto: CreateFoodTypeDto): Promise<FoodType> {
+    try {
+      const result = await this.foodTypeModel.create(createFoodTypeDto);
+      return result;
+    } catch (error) {
+      console.log(error);
+      return null;
+    }
   }
 
   findAll() {

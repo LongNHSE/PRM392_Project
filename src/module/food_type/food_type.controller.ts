@@ -6,18 +6,32 @@ import {
   Patch,
   Param,
   Delete,
+  UsePipes,
+  ValidationPipe,
 } from '@nestjs/common';
 import { FoodTypeService } from './food_type.service';
 import { CreateFoodTypeDto } from './dto/create-food_type.dto';
 import { UpdateFoodTypeDto } from './dto/update-food_type.dto';
+import { apiFailed, apiSuccess } from 'src/common/api-response';
 
-@Controller('foodTypes')
+@Controller('food_types')
 export class FoodTypeController {
   constructor(private readonly foodTypeService: FoodTypeService) {}
 
   @Post()
-  create(@Body() createFoodTypeDto: CreateFoodTypeDto) {
-    return this.foodTypeService.create(createFoodTypeDto);
+  //enable validation pipe
+  @UsePipes(new ValidationPipe())
+  async create(@Body() createFoodTypeDto: CreateFoodTypeDto) {
+    try {
+      const result = await this.foodTypeService.create(createFoodTypeDto);
+      if (result) {
+        return apiSuccess(201, result, 'Created food type successfully');
+      } else {
+        return apiFailed(400, 'Created food type failled');
+      }
+    } catch (error) {
+      return apiFailed(400, 'Created food type failled');
+    }
   }
 
   @Get()
