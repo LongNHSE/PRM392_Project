@@ -1,4 +1,8 @@
 import { PartialType } from '@nestjs/mapped-types';
 import { CreateFoodTypeDto } from './create-food_type.dto';
-
-export class UpdateFoodTypeDto extends PartialType(CreateFoodTypeDto) {}
+import { IsNotEmpty, IsString } from 'class-validator';
+export class UpdateFoodTypeDto extends PartialType(CreateFoodTypeDto) {
+  @IsNotEmpty()
+  @IsString()
+  name: string;
+}

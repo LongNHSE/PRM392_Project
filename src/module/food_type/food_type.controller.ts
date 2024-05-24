@@ -23,6 +23,12 @@ export class FoodTypeController {
   @UsePipes(new ValidationPipe())
   async create(@Body() createFoodTypeDto: CreateFoodTypeDto) {
     try {
+      const checkName = await this.foodTypeService.findByName(
+        createFoodTypeDto.name,
+      );
+      if (checkName) {
+        return apiFailed(400, 'Food type already existed');
+      }
       const result = await this.foodTypeService.create(createFoodTypeDto);
       if (result) {
         return apiSuccess(201, result, 'Created food type successfully');
@@ -35,21 +41,41 @@ export class FoodTypeController {
   }
 
   @Get()
-  findAll() {
-    return this.foodTypeService.findAll();
+  async findAll() {
+    try {
+      const result = await this.foodTypeService.findAll();
+      if (result) {
+        return apiSuccess(200, result, 'Get all food types successfully');
+      } else {
+        return apiFailed(400, null, 'Get all food types failled');
+      }
+    } catch (error) {
+      return apiFailed(400, null, 'Get all food types failled');
+    }
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.foodTypeService.findOne(+id);
+  async findOne(@Param('id') _id: string) {
+    try {
+      const result = await this.foodTypeService.findOne(_id);
+      return apiSuccess(200, result, 'Get food type successfully');
+    } catch (error) {
+      return apiFailed(400, null, 'Get food type failled');
+    }
   }
 
   @Patch(':id')
-  update(
-    @Param('id') id: string,
+  @UsePipes(new ValidationPipe())
+  async update(
+    @Param('id') _id: string,
     @Body() updateFoodTypeDto: UpdateFoodTypeDto,
   ) {
-    return this.foodTypeService.update(+id, updateFoodTypeDto);
+    try {
+      const result = await this.foodTypeService.update(_id, updateFoodTypeDto);
+      return apiSuccess(200, result, 'Updated food type successfully');
+    } catch (error) {
+      return apiFailed(error.status, null, error.message.toString());
+    }
   }
 
   @Delete(':id')
