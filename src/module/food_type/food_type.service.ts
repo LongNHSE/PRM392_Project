@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateFoodTypeDto } from './dto/create-food_type.dto';
 import { UpdateFoodTypeDto } from './dto/update-food_type.dto';
 import { InjectModel } from '@nestjs/mongoose';
@@ -10,27 +10,38 @@ export class FoodTypeService {
   constructor(
     @InjectModel(FoodType.name) private readonly foodTypeModel: Model<FoodType>,
   ) {}
-
+  async findByName(name: string) {
+    return await this.foodTypeModel.findOne({ name: name });
+  }
   async create(createFoodTypeDto: CreateFoodTypeDto): Promise<FoodType> {
     try {
-      const result = await this.foodTypeModel.create(createFoodTypeDto);
-      return result;
+      return await this.foodTypeModel.create(createFoodTypeDto);
+    } catch (error) {
+      return null;
+    }
+  }
+
+  async findAll() {
+    try {
+      return await this.foodTypeModel.find();
     } catch (error) {
       console.log(error);
       return null;
     }
   }
 
-  findAll() {
-    return `This action returns all foodType`;
+  async findOne(_id: string) {
+    return await this.foodTypeModel.findById(_id);
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} foodType`;
-  }
-
-  update(id: number, updateFoodTypeDto: UpdateFoodTypeDto) {
-    return `This action updates a #${id} foodType`;
+  async update(_id: string, updateFoodTypeDto: UpdateFoodTypeDto) {
+    const foodType = await this.foodTypeModel.findById(_id);
+    if (!foodType) {
+      throw new NotFoundException(`FoodType with id ${_id} not found`);
+    }
+    return await this.foodTypeModel.findByIdAndUpdate(_id, updateFoodTypeDto, {
+      new: true,
+    });
   }
 
   remove(id: number) {
