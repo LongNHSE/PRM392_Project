@@ -1,15 +1,36 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  UsePipes,
+  ValidationPipe,
+} from '@nestjs/common';
 import { FoodService } from './food.service';
 import { CreateFoodDto } from './dto/create-food.dto';
 import { UpdateFoodDto } from './dto/update-food.dto';
+import { apiFailed, apiSuccess } from 'src/common/api-response';
 
-@Controller('food')
+@Controller('foods')
 export class FoodController {
   constructor(private readonly foodService: FoodService) {}
 
   @Post()
-  create(@Body() createFoodDto: CreateFoodDto) {
-    return this.foodService.create(createFoodDto);
+  @UsePipes(new ValidationPipe())
+  async create(@Body() createFoodDto: CreateFoodDto) {
+    try {
+      const result = await this.foodService.create(createFoodDto);
+      if (result) {
+        return apiSuccess(201, result, 'Created food succesfully');
+      } else {
+        return apiFailed(400, null, 'Created food failed');
+      }
+    } catch (error) {
+      return apiFailed(400, null, 'Created food failed');
+    }
   }
 
   @Get()

@@ -10,6 +10,7 @@ import { FoodModule } from './module/food/food.module';
   imports: [
     ConfigModule.forRoot({
       envFilePath: '.env',
+      cache: true,
     }),
     FoodTypeModule,
     FoodModule,
