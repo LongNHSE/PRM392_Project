@@ -3,6 +3,7 @@ import { FoodTypeService } from './food_type.service';
 import { FoodTypeController } from './food_type.controller';
 import { MongooseModule } from '@nestjs/mongoose';
 import { FoodType, FoodTypeSchema } from './schema/food_type.schema';
+import { IsFoodTypeExistedConstraint } from './validator/is-food-existed';
 
 @Module({
   controllers: [FoodTypeController],
@@ -14,6 +15,6 @@ import { FoodType, FoodTypeSchema } from './schema/food_type.schema';
       },
     ]),
   ],
-  providers: [FoodTypeService],
+  providers: [FoodTypeService, IsFoodTypeExistedConstraint],
 })
 export class FoodTypeModule {}
