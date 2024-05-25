@@ -41,9 +41,5 @@ export class CreateFoodDto {
 
   @IsNotEmpty()
   @IsString()
-  icon: string;
-
-  @IsNotEmpty()
-  @IsString()
   description: string;
 }

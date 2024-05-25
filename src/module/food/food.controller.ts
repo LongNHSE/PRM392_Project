@@ -19,33 +19,59 @@ export class FoodController {
   constructor(private readonly foodService: FoodService) {}
 
   @Post()
-  @UsePipes(new ValidationPipe())
+  @UsePipes(new ValidationPipe({ whitelist: true }))
   async create(@Body() createFoodDto: CreateFoodDto) {
     try {
       const result = await this.foodService.create(createFoodDto);
+      console.log(result);
       if (result) {
         return apiSuccess(201, result, 'Created food succesfully');
       } else {
         return apiFailed(400, null, 'Created food failed');
       }
     } catch (error) {
-      return apiFailed(400, null, 'Created food failed');
+      console.log(error);
+      // return error;
+      return apiFailed(
+        400,
+        null,
+        error?.message ? error.message : 'Created food failed',
+      );
     }
   }
 
   @Get()
-  findAll() {
-    return this.foodService.findAll();
+  async findAll() {
+    try {
+      const result = await this.foodService.findAll();
+      return apiSuccess(200, result, 'Get all foods successfully');
+    } catch (error) {
+      return apiFailed(400, {}, 'Get all foods failed');
+    }
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.foodService.findOne(+id);
+  async findOne(@Param('id') _id: string) {
+    try {
+      const result = await this.foodService.findOne(_id);
+      return apiSuccess(200, result, 'Get food successfully');
+    } catch (error) {
+      return apiFailed(400, {}, 'Get food failed');
+    }
   }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateFoodDto: UpdateFoodDto) {
-    return this.foodService.update(+id, updateFoodDto);
+    try {
+      const result = this.foodService.update(id, updateFoodDto);
+      if (result) {
+        return apiSuccess(200, result, 'Updated food successfully');
+      } else {
+        return apiFailed(400, null, 'Updated food failed');
+      }
+    } catch (error) {
+      return apiFailed(400, null, 'Updated food failed');
+    }
   }
 
   @Delete(':id')

@@ -32,7 +32,7 @@ export class Food {
   @Prop({ required: true })
   water: number;
 
-  @Prop({ required: true })
+  @Prop({ required: false })
   icon: string;
 
   @Prop({ required: true })

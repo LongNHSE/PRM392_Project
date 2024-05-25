@@ -3,10 +3,13 @@ import { CreateFoodDto } from './dto/create-food.dto';
 import { UpdateFoodDto } from './dto/update-food.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Food } from './schema/food.schema';
-import { Model } from 'mongoose';
+import mongoose, { Model } from 'mongoose';
 
 @Injectable()
 export class FoodService {
+  async updateImage(_id: string, resultUrl: unknown) {
+    return await this.foodModel.findByIdAndUpdate(_id, { icon: resultUrl });
+  }
   constructor(
     @InjectModel(Food.name) private readonly foodModel: Model<Food>,
   ) {}
@@ -19,16 +22,41 @@ export class FoodService {
     }
   }
 
-  findAll() {
-    return `This action returns all food`;
+  async findAll() {
+    return await this.foodModel.aggregate([
+      {
+        $lookup: {
+          from: 'foodtypes',
+          localField: 'typeId',
+          foreignField: '_id',
+          as: 'foodType',
+        },
+      },
+    ]);
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} food`;
+  async findOne(id: string) {
+    return await this.foodModel.aggregate([
+      {
+        $match: {
+          _id: new mongoose.Types.ObjectId(id),
+        },
+      },
+      {
+        $lookup: {
+          from: 'foodtypes',
+          localField: 'typeId',
+          foreignField: '_id',
+          as: 'foodType',
+        },
+      },
+    ]);
   }
 
-  update(id: number, updateFoodDto: UpdateFoodDto) {
-    return `This action updates a #${id} food`;
+  async update(id: string, updateFoodDto: UpdateFoodDto) {
+    return await this.foodModel.findByIdAndUpdate(id, updateFoodDto, {
+      new: true,
+    });
   }
 
   remove(id: number) {
