@@ -16,20 +16,20 @@ import { apiFailed, apiSuccess } from 'src/common/api-response';
 
 @Controller('productDetail')
 export class ProductDetailController {
-  constructor(private readonly popupDetailService: ProductDetailService) {}
+  constructor(private readonly productDetailService: ProductDetailService) {}
 
   @Post()
   @UsePipes(new ValidationPipe({ whitelist: true }))
   async create(@Body() createProductDetailDto: CreateProductDetailDto) {
     try {
-      const result = await this.popupDetailService.create(
+      const result = await this.productDetailService.create(
         createProductDetailDto,
       );
       console.log(result);
       if (result) {
-        return apiSuccess(201, result, 'Created popup succesfully');
+        return apiSuccess(201, result, 'Created product detail succesfully');
       } else {
-        return apiFailed(400, null, 'Created popup failed');
+        return apiFailed(400, null, 'Created product detail failed');
       }
     } catch (error) {
       console.log(error);
@@ -37,7 +37,7 @@ export class ProductDetailController {
       return apiFailed(
         400,
         null,
-        error?.message ? error.message : 'Created popup failed',
+        error?.message ? error.message : 'Created product detail failed',
       );
     }
   }
@@ -45,20 +45,20 @@ export class ProductDetailController {
   @Get()
   async findAll() {
     try {
-      const result = await this.popupDetailService.findAll();
-      return apiSuccess(200, result, 'Get all popup successfully');
+      const result = await this.productDetailService.findAll();
+      return apiSuccess(200, result, 'Get all product detail successfully');
     } catch (error) {
-      return apiFailed(400, {}, 'Get all popup failed');
+      return apiFailed(400, {}, 'Get all product detail failed');
     }
   }
 
   @Get(':id')
   async findOne(@Param('id') _id: string) {
     try {
-      const result = await this.popupDetailService.findOne(_id);
-      return apiSuccess(200, result, 'Get popup successfully');
+      const result = await this.productDetailService.findOne(_id);
+      return apiSuccess(200, result, 'Get product detail successfully');
     } catch (error) {
-      return apiFailed(400, {}, 'Get popup failed');
+      return apiFailed(400, {}, 'Get product detail failed');
     }
   }
 
@@ -68,19 +68,22 @@ export class ProductDetailController {
     @Body() updateProductDetailDto: UpdateProductDetailDto,
   ) {
     try {
-      const result = this.popupDetailService.update(id, updateProductDetailDto);
+      const result = this.productDetailService.update(
+        id,
+        updateProductDetailDto,
+      );
       if (result) {
-        return apiSuccess(200, result, 'Updated popup successfully');
+        return apiSuccess(200, result, 'Updated product detail successfully');
       } else {
-        return apiFailed(400, null, 'Updated popup failed');
+        return apiFailed(400, null, 'Updated product detail failed');
       }
     } catch (error) {
-      return apiFailed(400, null, 'Updated popup failed');
+      return apiFailed(400, null, 'Updated product detail failed');
     }
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.popupDetailService.remove(+id);
+    return this.productDetailService.remove(+id);
   }
 }
