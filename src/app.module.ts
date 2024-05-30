@@ -17,6 +17,7 @@ import { UserModule } from './module/user/user.module';
 import { OtpModule } from './module/otp/otp.module';
 import { BlackListTokenModule } from './module/black-list-token/black-list-token.module';
 import { MailModule } from './module/mail/mail.module';
+import { AuthModule } from './module/auth/auth.module';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { MailModule } from './module/mail/mail.module';
     Food_imageModule,
     FoodTypeModule,
     UserModule,
+    AuthModule,
     OtpModule,
     FoodModule,
     BillModule,
