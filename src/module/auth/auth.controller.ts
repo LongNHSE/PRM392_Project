@@ -10,6 +10,8 @@ import {
   UseGuards,
   Res,
   Headers,
+  UsePipes,
+  ValidationPipe,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthDTO, LoginDTO } from './dto';
@@ -36,9 +38,9 @@ export class AuthController {
   ) {
     return this.authService.login(body, response);
   }
+  @UsePipes(new ValidationPipe())
   @Post('signup')
   register(@Body() body: AuthDTO) {
-    console.log(body);
     return this.authService.register(body);
   }
   @Get('logout')

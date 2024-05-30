@@ -1,25 +1,20 @@
 import { Exclude } from 'class-transformer';
-import { IsNotEmpty, IsString, IsEmail, IsDateString } from 'class-validator';
+import {
+  IsNotEmpty,
+  IsString,
+  IsEmail,
+  IsDateString,
+  IsOptional,
+  IsDate,
+} from 'class-validator';
 
 export class AuthDTO {
   @Exclude()
   _id: string;
 
   @IsNotEmpty()
-  @IsString()
-  firstName: string;
-
-  @IsNotEmpty()
-  @IsString()
-  lastName: string;
-
-  @IsNotEmpty()
   @IsEmail()
   email: string;
-
-  @IsNotEmpty()
-  @IsDateString()
-  dateOfBirth: string;
 
   @IsNotEmpty()
   @IsString()
@@ -27,20 +22,23 @@ export class AuthDTO {
 
   @IsNotEmpty()
   @IsString()
-  @Exclude()
   password: string;
 
   @IsNotEmpty()
   @IsString()
   gender: string;
 
+  @IsString()
+  @IsOptional()
   avatar: string;
 
-  status: string;
-
+  @IsString()
+  @IsOptional()
   phone: string;
 
-  role: string;
+  @IsDateString()
+  @IsNotEmpty()
+  dob: Date;
 
   @Exclude()
   refreshToken: string;
