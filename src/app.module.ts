@@ -18,6 +18,14 @@ import { OtpModule } from './module/otp/otp.module';
 import { BlackListTokenModule } from './module/black-list-token/black-list-token.module';
 import { MailModule } from './module/mail/mail.module';
 import { AuthModule } from './module/auth/auth.module';
+import { DietModule } from './module/diet/diet.module';
+import { ActivityLevelModule } from './module/activity_level/activity_level.module';
+import { GoalModule } from './module/goal/goal.module';
+import { ExerciseModule } from './module/exercise/exercise.module';
+import { ExSessionModule } from './module/ex_session/ex_session.module';
+import { DayModule } from './module/day/day.module';
+import { MealModule } from './module/meal/meal.module';
+import { FoodDetailModule } from './module/food_detail/food_detail.module';
 
 @Module({
   imports: [
@@ -47,6 +55,14 @@ import { AuthModule } from './module/auth/auth.module';
       }),
       inject: [ConfigService],
     }),
+    DietModule,
+    ActivityLevelModule,
+    GoalModule,
+    ExerciseModule,
+    ExSessionModule,
+    DayModule,
+    MealModule,
+    FoodDetailModule,
   ],
   controllers: [AppController],
   providers: [AppService],
