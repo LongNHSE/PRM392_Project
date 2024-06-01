@@ -6,6 +6,7 @@ import {
   ActivityLevel,
   ActivityLevelSchema,
 } from './schema/activity_level.schema';
+import { IsActivityLevelExistsContstraint } from './validator/is-activity-existed';
 
 @Module({
   controllers: [ActivityLevelController],
@@ -14,6 +15,7 @@ import {
       { name: ActivityLevel.name, schema: ActivityLevelSchema },
     ]),
   ],
-  providers: [ActivityLevelService],
+  exports: [],
+  providers: [ActivityLevelService, IsActivityLevelExistsContstraint],
 })
 export class ActivityLevelModule {}
