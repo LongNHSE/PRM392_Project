@@ -1,4 +1,4 @@
-import { Prop, Schema } from '@nestjs/mongoose';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose from 'mongoose';
 import { ActivityLevel } from 'src/module/activity_level/schema/activity_level.schema';
 import { Goal } from 'src/module/goal/schema/goal.schema';
@@ -51,4 +51,4 @@ export class Diet {
   status: string;
 }
 
-export const DietSchema = new mongoose.Schema(Diet);
+export const DietSchema = SchemaFactory.createForClass(Diet);

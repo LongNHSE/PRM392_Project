@@ -14,7 +14,7 @@ import { IsUserExistsConstraint } from './validator/is-user-exists.validator';
     ImageModule,
     MongooseModule.forFeature([{ name: User.name, schema: userSchema }]),
     MongooseModule.forFeature([{ name: OTP.name, schema: otpSchema }]),
-    JwtModule.register({})
+    JwtModule.register({}),
   ],
   providers: [UserService, IsUserExistsConstraint],
   exports: [UserService],
