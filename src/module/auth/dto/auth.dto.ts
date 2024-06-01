@@ -5,7 +5,6 @@ import {
   IsEmail,
   IsDateString,
   IsOptional,
-  IsDate,
 } from 'class-validator';
 
 export class AuthDTO {
