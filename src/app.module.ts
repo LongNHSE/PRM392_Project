@@ -26,6 +26,7 @@ import { ExSessionModule } from './module/ex_session/ex_session.module';
 import { DayModule } from './module/day/day.module';
 import { MealModule } from './module/meal/meal.module';
 import { FoodDetailModule } from './module/food_detail/food_detail.module';
+import { BmiModule } from './module/bmi/bmi.module';
 
 @Module({
   imports: [
@@ -63,6 +64,7 @@ import { FoodDetailModule } from './module/food_detail/food_detail.module';
     DayModule,
     MealModule,
     FoodDetailModule,
+    BmiModule,
   ],
   controllers: [AppController],
   providers: [AppService],
