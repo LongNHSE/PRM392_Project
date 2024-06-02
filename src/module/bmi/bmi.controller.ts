@@ -13,10 +13,8 @@ import {
 import { BmiService } from './bmi.service';
 import { CreateBmiDto } from './dto/create-bmi.dto';
 import { UpdateBmiDto } from './dto/update-bmi.dto';
-
 import { AuthGuard } from '@nestjs/passport';
 import { GetUser } from '../auth/decorator';
-import { User } from '../user/schema/user.schema';
 import { apiSuccess, apiFailed } from 'src/common/api-response';
 
 @Controller('bmi')

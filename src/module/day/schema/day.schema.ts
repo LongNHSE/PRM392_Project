@@ -51,6 +51,9 @@ export class Day {
 
   @Prop({ required: true })
   water: number;
+
+  @Prop({ required: true, default: true })
+  isActive: boolean;
 }
 
 export const DaySchema = SchemaFactory.createForClass(Day);

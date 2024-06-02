@@ -1,4 +1,4 @@
-import { Allow, IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
 import { IsActivityLevelExist } from 'src/module/activity_level/validator/is-activity-existed';
 import { IsGoalExist } from 'src/module/goal/validator/is-goal-exist';
 

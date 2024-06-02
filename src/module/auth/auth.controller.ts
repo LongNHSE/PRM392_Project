@@ -52,7 +52,6 @@ export class AuthController {
   ) {
     try {
       if (user.userId) {
-        console.log(jwt);
         if (!jwt) {
           return apiFailed(400, {}, 'Logout failed');
         }

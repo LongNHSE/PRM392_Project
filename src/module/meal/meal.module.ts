@@ -3,6 +3,7 @@ import { MealService } from './meal.service';
 import { MealController } from './meal.controller';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Meal, MealSchema } from './schema/meal.schema';
+import { IsMealExistedConstraint } from './validator/is-meal-existed.';
 
 @Module({
   controllers: [MealController],
@@ -14,6 +15,6 @@ import { Meal, MealSchema } from './schema/meal.schema';
       },
     ]),
   ],
-  providers: [MealService],
+  providers: [MealService, IsMealExistedConstraint],
 })
 export class MealModule {}

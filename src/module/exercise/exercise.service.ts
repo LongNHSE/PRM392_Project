@@ -1,26 +1,36 @@
 import { Injectable } from '@nestjs/common';
 import { CreateExerciseDto } from './dto/create-exercise.dto';
 import { UpdateExerciseDto } from './dto/update-exercise.dto';
+import { InjectModel } from '@nestjs/mongoose';
+import { Exercise } from './schema/exercise.schema';
+import { Model } from 'mongoose';
 
 @Injectable()
 export class ExerciseService {
+  constructor(
+    @InjectModel(Exercise.name) private exerciseModel: Model<Exercise>,
+  ) {}
   create(createExerciseDto: CreateExerciseDto) {
-    return 'This action adds a new exercise';
+    return this.exerciseModel.create(createExerciseDto);
   }
 
   findAll() {
-    return `This action returns all exercise`;
+    return this.exerciseModel.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} exercise`;
+  findOne(id: string) {
+    return this.exerciseModel.findById(id);
   }
 
-  update(id: number, updateExerciseDto: UpdateExerciseDto) {
-    return `This action updates a #${id} exercise`;
+  update(id: string, updateExerciseDto: UpdateExerciseDto) {
+    return this.exerciseModel.findByIdAndUpdate(id, updateExerciseDto, {
+      new: true,
+    });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} exercise`;
+  remove(id: string) {
+    return this.exerciseModel.findByIdAndUpdate(id, {
+      isActive: false,
+    });
   }
 }
