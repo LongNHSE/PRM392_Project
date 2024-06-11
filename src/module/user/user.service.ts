@@ -8,18 +8,14 @@ import { UpdatePasswordDto } from './dto/update-password.dto';
 import * as bcrypt from 'bcrypt';
 import { ResetPasswordDto } from './dto/reset-password.dto';
 import { OTP } from '../otp/schema/otp.schema';
-import { Model, ObjectId } from 'mongoose';
-import {
-  ValidatorConstraint,
-  ValidatorConstraintInterface,
-} from 'class-validator';
+import { Model } from 'mongoose';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectModel(User.name) private userModel: Model<User>,
     @InjectModel(OTP.name) private otpModel: Model<OTP>,
-    private readonly jwtService: JwtService
+    private readonly jwtService: JwtService,
   ) {}
 
   updateImage(id: string, urlResult: string) {
@@ -57,17 +53,17 @@ export class UserService {
   }
 
   async deleteUser(id: string) {
-    return this.userModel.findByIdAndDelete(id);
+    return this.userModel.findByIdAndUpdate(id, { isDeleted: true });
   }
 
   async findById(id: string) {
     return this.userModel.findById(id);
   }
 
-  async getProfileDetailByToken(jwt: string) {
-    const token = jwt.replace('Bearer ', '');
-    const decodedToken = await this.jwtService.decode(token);
-    const account = await this.findById(decodedToken?.userId);
+  async getProfileDetailByToken(userId: string) {
+    // const token = jwt.replace('Bearer ', '');
+    // const decodedToken = await this.jwtService.decode(token);
+    const account = await this.findById(userId);
 
     return account;
   }

@@ -10,7 +10,7 @@ export class ImageService {
     path: string,
     fileName: string,
     id: string,
-  ) {
+  ): Promise<string> {
     const timestamp = Date.now();
 
     const storage = this.firebaseService.getFirestoreInstance();
@@ -31,7 +31,6 @@ export class ImageService {
         await fileUpload.makePublic();
 
         const imageUrl = `https://storage.googleapis.com/${bucket.name}/${path}/${id}/${timestamp}_${fileName}`;
-        // const publicUrl = `https://storage.googleapis.com/${bucket.name}/${fileUpload.name}`;
         console.log(imageUrl);
         resolve(imageUrl);
       });

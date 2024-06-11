@@ -58,8 +58,6 @@ export class AuthService {
   async register(dto: AuthDTO): Promise<string | any> {
     //generate password hash
     const hash = await bcrypt.hash(dto.password, 10);
-    console.log(hash);
-    //create new user
     try {
       const newUser = new this.userModel({ ...dto, password: hash });
       const token = await this.signToken(newUser._id);
@@ -78,16 +76,23 @@ export class AuthService {
     } catch (e) {
       if (e instanceof MongoServerError) {
         if (e.code === 11000) {
-          console.log(e);
-          return e;
+          throw e;
         }
-        return e;
+        throw e;
       } else {
-        return { message: 'Something went wrong', statusCode: 500 };
+        return {
+          message: 'Something went wrong',
+          statusCode: 500,
+          error: 'Internal Server Error',
+        };
       }
     }
   }
-
+  // async register(dto: AuthDTO): Promise<string | any> {
+  //   const newUser = new this.userModel({ ...dto, password: 'asdasd' });
+  //   // const token = await this.signToken(newUser._id);
+  //   return newUser.save();
+  // }
   async logout(userId: string, token: string): Promise<boolean> {
     try {
       console.log(token);
