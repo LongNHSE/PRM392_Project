@@ -21,7 +21,9 @@ export class DietController {
   constructor(private readonly dietService: DietService) {}
 
   @Post()
-  // @UsePipes(new ValidationPipe({ whitelist: true }))
+  @UsePipes(
+    new ValidationPipe({ whitelist: true, skipMissingProperties: true }),
+  )
   @UseGuards(AuthGuard('jwt'))
   async create(@Body() createDietDto: CreateDietDto, @GetUser() user: any) {
     try {
@@ -32,8 +34,7 @@ export class DietController {
         return apiFailed(400, {}, 'Failed to create Diet');
       }
     } catch (err) {
-      console.log(err);
-      return apiFailed(400, {}, 'Failed to create Diet');
+      throw err;
     }
   }
 
@@ -42,13 +43,12 @@ export class DietController {
     try {
       const diet = await this.dietService.findAll();
       if (diet) {
-        return diet;
+        return apiSuccess(200, diet, 'Diet found successfully');
       } else {
         return { message: 'Failed to find diet' };
       }
     } catch (err) {
-      console.log(err);
-      return { message: 'Failed to find diet' };
+      throw err;
     }
   }
 
@@ -58,13 +58,12 @@ export class DietController {
     try {
       const diet = await this.dietService.findMyDiet(user.userId);
       if (diet) {
-        return diet;
+        return apiSuccess(200, diet, 'Diet found successfully');
       } else {
         return { message: 'Failed to find diet' };
       }
     } catch (err) {
-      console.log(err);
-      return { message: 'Failed to find diet' };
+      throw err;
     }
   }
 
@@ -78,14 +77,15 @@ export class DietController {
         return { message: 'Failed to find diet' };
       }
     } catch (err) {
-      console.log(err);
-      return { message: 'Failed to find diet' };
+      throw err;
     }
   }
 
   @Patch(':id')
   @UseGuards(AuthGuard('jwt'))
-  @UsePipes(new ValidationPipe({ whitelist: true }))
+  @UsePipes(
+    new ValidationPipe({ whitelist: true, skipMissingProperties: true }),
+  )
   async update(@Body() body: CreateDietDto, @Param('id') id: string) {
     try {
       const diet = await this.dietService.update(id, body);
@@ -95,8 +95,7 @@ export class DietController {
         return { message: 'Failed to update diet' };
       }
     } catch (err) {
-      console.log(err);
-      return { message: 'Failed to update diet' };
+      throw err;
     }
   }
 
@@ -111,8 +110,7 @@ export class DietController {
         return { message: 'Failed to remove diet' };
       }
     } catch (err) {
-      console.log(err);
-      return { message: 'Failed to remove diet' };
+      throw err;
     }
   }
 }

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
 import { CreateGoalDto } from './dto/create_goal.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Goal } from './schema/goal.schema';
@@ -8,6 +8,7 @@ import { Model } from 'mongoose';
 export class GoalService {
   constructor(@InjectModel(Goal.name) private goalModel: Model<Goal>) {}
   findOne(id: string) {
+    throw new Error('Method not implemented.');
     return this.goalModel.findById(id);
   }
   findAll() {

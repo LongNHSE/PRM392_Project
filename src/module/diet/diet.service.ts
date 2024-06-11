@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { CreateDietDto } from './dto/create-diet.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Diet } from './schema/diet.schema';
-import { Model } from 'mongoose';
+import mongoose, { Model } from 'mongoose';
 
 @Injectable()
 export class DietService {
@@ -25,6 +25,12 @@ export class DietService {
           as: 'goals',
         },
       },
+      {
+        $unwind: '$goals',
+      },
+      {
+        $unwind: '$activity_levels',
+      },
     ]);
   }
   create(createDietDto: CreateDietDto, userId: string) {
@@ -38,7 +44,7 @@ export class DietService {
 
   findOne(id: string) {
     return this.dietModel.aggregate([
-      { $match: { _id: id } },
+      { $match: { _id: new mongoose.Types.ObjectId(id) } },
       {
         $lookup: {
           from: 'activitylevels',
@@ -54,6 +60,12 @@ export class DietService {
           foreignField: '_id',
           as: 'goals',
         },
+      },
+      {
+        $unwind: '$goals',
+      },
+      {
+        $unwind: '$activity_levels',
       },
     ]);
   }
@@ -69,7 +81,7 @@ export class DietService {
   findMyDiet(userId: string) {
     return this.dietModel.aggregate([
       {
-        $match: { userId },
+        $match: { userId: new mongoose.Types.ObjectId(userId) },
       },
       {
         $lookup: {
@@ -86,6 +98,12 @@ export class DietService {
           foreignField: '_id',
           as: 'goals',
         },
+      },
+      {
+        $unwind: '$goals',
+      },
+      {
+        $unwind: '$activity_levels',
       },
     ]);
   }

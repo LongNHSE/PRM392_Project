@@ -6,15 +6,21 @@ import {
 } from '@nestjs/common';
 import { Request, Response } from 'express';
 
-@Catch(HttpException)
+// Catch both HttpException and Error
+@Catch(HttpException, Error)
 export class HttpExceptionFilter implements ExceptionFilter {
-  catch(exception: HttpException, host: ArgumentsHost) {
-    console.log('asdasd');
+  catch(exception: HttpException | Error, host: ArgumentsHost) {
+    console.log(exception);
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
     const request = ctx.getRequest<Request>();
-    const status = exception.getStatus();
 
+    // Determine if the exception is an HttpException to get the status code
+    // Otherwise, default to 500
+    const status =
+      exception instanceof HttpException ? exception.getStatus() : 500;
+
+    // Use the status code determined above
     response.status(status).json({
       statusCode: status,
       message: exception.message,

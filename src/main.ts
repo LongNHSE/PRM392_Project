@@ -2,11 +2,11 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { useContainer } from 'class-validator';
 import { MongoExceptionFilter } from './common/validation/mongooseValidation.validation';
-import { HttpExceptionFilter } from './common/validation/customFilter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   await app.enableCors();
+  // app.useGlobalPipes(new CustomValidationPipe());
   app.useGlobalFilters(new MongoExceptionFilter()); // Use Mongo exception filter
   // app.useGlobalFilters(new HttpExceptionFilter()); // Use validation pipe
 

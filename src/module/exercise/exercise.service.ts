@@ -7,6 +7,13 @@ import { Model } from 'mongoose';
 
 @Injectable()
 export class ExerciseService {
+  updateImage(id: string, urlResult: string) {
+    return this.exerciseModel.findByIdAndUpdate(
+      id,
+      { icon: urlResult },
+      { new: true },
+    );
+  }
   constructor(
     @InjectModel(Exercise.name) private exerciseModel: Model<Exercise>,
   ) {}

@@ -23,7 +23,7 @@ export class ExSessionController {
         return apiSuccess(201, result, 'Session created successfully');
       else return apiFailed(400, {}, 'Failed to create Exercise');
     } catch (e) {
-      return apiFailed(400, {}, 'Failed to create Exercise');
+      throw e;
     }
   }
 

@@ -31,8 +31,7 @@ export class GoalController {
         return apiFailed(400, {}, 'Failed to create Goal');
       }
     } catch (err) {
-      console.log(err);
-      return apiFailed(400, {}, 'Failed to create Goal');
+      throw err;
     }
   }
 
@@ -46,8 +45,7 @@ export class GoalController {
         return apiFailed(400, {}, 'Failed to find Goal');
       }
     } catch (err) {
-      console.log(err);
-      return apiFailed(400, {}, 'Failed to find Goal');
+      throw err;
     }
   }
 
@@ -61,15 +59,14 @@ export class GoalController {
         return apiFailed(400, {}, 'Failed to find Goal');
       }
     } catch (err) {
-      console.log(err);
-      return apiFailed(400, {}, 'Failed to find Goal');
+      throw err;
     }
   }
 
   @Patch(':id')
   @UseGuards(AuthGuard('jwt'))
   @UsePipes(new ValidationPipe({ whitelist: true }))
-  async update(@Param('id') id: string, @Body() updateGoalDto: CreateGoalDto) {
+  async update(@Param('id') id: string, @Body() updateGoalDto: any) {
     try {
       const goal = await this.goalService.update(id, updateGoalDto);
       if (goal) {
@@ -78,8 +75,7 @@ export class GoalController {
         return apiFailed(400, {}, 'Failed to update Goal');
       }
     } catch (err) {
-      console.log(err);
-      return apiFailed(400, {}, 'Failed to update Goal');
+      throw err;
     }
   }
 
@@ -94,8 +90,7 @@ export class GoalController {
         return apiFailed(400, {}, 'Failed to remove Goal');
       }
     } catch (err) {
-      console.log(err);
-      return apiFailed(400, {}, 'Failed to remove Goal');
+      throw err;
     }
   }
 }

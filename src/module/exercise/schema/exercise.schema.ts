@@ -4,7 +4,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
   timestamps: true,
 })
 export class Exercise {
-  @Prop({ required: true })
+  @Prop({ required: true, unique: true })
   exName: string;
 
   @Prop({ required: true })
@@ -16,7 +16,7 @@ export class Exercise {
   @Prop({ required: true })
   calorexp: number;
 
-  @Prop({ required: true })
+  @Prop({ required: false })
   icon: string;
 
   @Prop({ required: false })

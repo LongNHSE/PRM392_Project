@@ -2,6 +2,7 @@ import {
   ArgumentsHost,
   Catch,
   ExceptionFilter,
+  HttpException,
   HttpStatus,
 } from '@nestjs/common';
 import { MongoError, Document } from 'mongodb';
@@ -13,8 +14,8 @@ interface MongoErrorWithKeyValue extends MongoError {
 
 @Catch(MongoError)
 export class MongoExceptionFilter implements ExceptionFilter {
-  catch(exception: MongoErrorWithKeyValue, host: ArgumentsHost) {
-    console.log('asdasd');
+  catch(exception: any, host: ArgumentsHost) {
+    console.log('ASdasd');
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
     switch (exception.code) {
