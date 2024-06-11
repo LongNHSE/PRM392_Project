@@ -12,6 +12,8 @@ import {
   Headers,
   UsePipes,
   ValidationPipe,
+  Catch,
+  UseFilters,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthDTO, LoginDTO } from './dto';
@@ -23,6 +25,7 @@ import { UserService } from '../user/user.service';
 import { OtpService } from '../otp/otp.service';
 import { Response } from 'express';
 import { apiSuccess, apiFailed } from 'src/common/api-response';
+import { MongoExceptionFilter } from 'src/common/validation/mongooseValidation.validation';
 @Controller('auth')
 export class AuthController {
   constructor(

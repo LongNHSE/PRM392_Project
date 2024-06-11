@@ -1,4 +1,5 @@
 import { FirebaseModule } from '../firebase/firebase.module';
+import { FirebaseService } from '../firebase/firebase.service';
 import { ImageService } from './image.service';
 /*
 https://docs.nestjs.com/modules

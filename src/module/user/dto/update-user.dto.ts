@@ -2,23 +2,23 @@ import { IsDateString, IsEmail, IsString } from 'class-validator';
 
 export class UpdateUserDto {
   @IsString()
-  firstName: string;
-
-  @IsString()
-  lastName: string;
+  username: string;
 
   @IsEmail()
   email: string;
 
   @IsDateString()
-  dateOfBirth: string;
+  dob: string;
 
   @IsString()
-  username: string;
+  phone: string;
+
+  @IsString()
+  address: string;
 
   @IsString()
   gender: string;
 
   @IsString()
-  phone: string;
+  avatar: string;
 }
