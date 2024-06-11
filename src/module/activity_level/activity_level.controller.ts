@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  HttpException,
   Param,
   Patch,
   Post,
@@ -37,8 +38,7 @@ export class ActivityLevelController {
         return apiFailed(400, {}, 'Failed to create Activity Level');
       }
     } catch (err) {
-      console.log(err);
-      return apiFailed(400, {}, 'Failed to create Activity Level');
+      throw err;
     }
   }
 
@@ -56,8 +56,7 @@ export class ActivityLevelController {
         return apiFailed(400, {}, 'Failed to find Activity Level');
       }
     } catch (err) {
-      console.log(err);
-      return apiFailed(400, {}, 'Failed to find Activity Level');
+      throw err;
     }
   }
 
@@ -75,18 +74,14 @@ export class ActivityLevelController {
         return apiFailed(400, {}, 'Failed to find Activity Level');
       }
     } catch (err) {
-      console.log(err);
-      return apiFailed(400, {}, 'Failed to find Activity Level');
+      throw err;
     }
   }
 
   @Patch(':id')
   @UseGuards(AuthGuard('jwt'))
   @UsePipes(new ValidationPipe({ whitelist: true }))
-  async update(
-    @Param('id') id: string,
-    @Body() updateActivityLevelDto: CreateActivityLevelDto,
-  ) {
+  async update(@Param('id') id: string, @Body() updateActivityLevelDto: any) {
     try {
       const activityLevel = await this.activityLevelService.update(
         id,
@@ -102,8 +97,7 @@ export class ActivityLevelController {
         return apiFailed(400, {}, 'Failed to update Activity Level');
       }
     } catch (err) {
-      console.log(err);
-      return apiFailed(400, {}, 'Failed to update Activity Level');
+      throw err;
     }
   }
 
@@ -122,8 +116,7 @@ export class ActivityLevelController {
         return apiFailed(400, {}, 'Failed to delete Activity Level');
       }
     } catch (err) {
-      console.log(err);
-      return apiFailed(400, {}, 'Failed to delete Activity Level');
+      throw err;
     }
   }
 }

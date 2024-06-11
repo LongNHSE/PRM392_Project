@@ -4,7 +4,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
   timestamps: true,
 })
 export class ActivityLevel {
-  @Prop({ required: true })
+  @Prop({ required: true, unique: true })
   levelName: string;
 
   @Prop({ required: false, default: true })
