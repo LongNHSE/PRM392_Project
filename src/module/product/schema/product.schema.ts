@@ -20,6 +20,9 @@ export class Product {
   brand: string;
 
   @Prop({ required: true })
+  image: string[];
+
+  @Prop({ required: true })
   origin: string;
 
   @Prop({ required: true })

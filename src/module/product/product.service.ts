@@ -7,6 +7,17 @@ import { Model } from 'mongoose';
 
 @Injectable()
 export class ProductService {
+  updateImage(productId: any, urlResult: string) {
+    return this.productModel.findByIdAndUpdate(productId, {
+      $push: { image: urlResult },
+    });
+  }
+
+  deleteImage(productId: any, urlResult: string) {
+    return this.productModel.findByIdAndUpdate(productId, {
+      $pull: { image: urlResult },
+    });
+  }
   // async updateImage(_id: string, resultUrl: unknown) {
   //   return await this.productModel.findByIdAndUpdate(_id, { icon: resultUrl });
   // }
