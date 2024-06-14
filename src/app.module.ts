@@ -27,6 +27,8 @@ import { DayModule } from './module/day/day.module';
 import { MealModule } from './module/meal/meal.module';
 import { FoodDetailModule } from './module/food_detail/food_detail.module';
 import { BmiModule } from './module/bmi/bmi.module';
+import { BlogModule } from './module/blog/blog.module';
+import { BlogReactModule } from './module/blog_react/blogReact.module';
 
 @Module({
   imports: [
@@ -48,6 +50,8 @@ import { BmiModule } from './module/bmi/bmi.module';
     ProductDetailModule,
     PaymentModule,
     PopupModule,
+    BlogModule,
+    BlogReactModule,
     PopupDetailModule,
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
