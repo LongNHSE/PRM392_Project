@@ -6,5 +6,8 @@
     "assets": ["**/*.hbs"],
     "deleteOutDir": true,
     "watchAssets": true
+  },
+  "generateOptions": {
+    "baseDir": "/module"
   }
 }

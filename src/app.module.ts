@@ -29,6 +29,12 @@ import { FoodDetailModule } from './module/food_detail/food_detail.module';
 import { BmiModule } from './module/bmi/bmi.module';
 import { BlogModule } from './module/blog/blog.module';
 import { BlogReactModule } from './module/blog_react/blogReact.module';
+import { MacroNutrientModule } from './module/macro_nutrient/macro_nutrient.module';
+import { MacroGroupModule } from './module/macro_group/macro_group.module';
+import { MealFrameModule } from './module/meal_frame/meal_frame.module';
+import { MealItemModule } from './module/meal_item/meal_item.module';
+import { MealStandardModule } from './module/meal_standard/meal_standard.module';
+import { MealStructureModule } from './module/meal_structure/meal_structure.module';
 
 @Module({
   imports: [
@@ -69,6 +75,12 @@ import { BlogReactModule } from './module/blog_react/blogReact.module';
     MealModule,
     FoodDetailModule,
     BmiModule,
+    MacroNutrientModule,
+    MacroGroupModule,
+    MealFrameModule,
+    MealItemModule,
+    MealStandardModule,
+    MealStructureModule,
   ],
   controllers: [AppController],
   providers: [AppService],

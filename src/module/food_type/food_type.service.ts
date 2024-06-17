@@ -23,7 +23,7 @@ export class FoodTypeService {
 
   async findAll() {
     try {
-      return await this.foodTypeModel.find();
+      return await this.foodTypeModel.find().populate('macroGroup');
     } catch (error) {
       console.log(error);
       return null;
@@ -31,7 +31,7 @@ export class FoodTypeService {
   }
 
   async findOne(_id: string) {
-    return await this.foodTypeModel.findById(_id);
+    return (await this.foodTypeModel.findById(_id)).populated('macroGroup');
   }
 
   async update(_id: string, updateFoodTypeDto: UpdateFoodTypeDto) {

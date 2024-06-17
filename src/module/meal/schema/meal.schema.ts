@@ -1,11 +1,18 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose from 'mongoose';
 import { Day } from 'src/module/day/schema/day.schema';
+import { MealFrame } from 'src/module/meal_frame/schema/meal_frame.schema';
 
 @Schema({
   timestamps: true,
 })
 export class Meal {
+  @Prop({
+    type: mongoose.Schema.Types.ObjectId,
+    ref: MealFrame.name,
+    required: false,
+  })
+  mealFrame: MealFrame | string;
   @Prop({ required: true, type: mongoose.Schema.Types.ObjectId, ref: Day.name })
   dayId: Day | string;
 
