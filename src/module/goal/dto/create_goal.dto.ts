@@ -4,4 +4,7 @@ export class CreateGoalDto {
   @IsNotEmpty()
   @IsString()
   goalName: string;
+
+  @IsNotEmpty()
+  sign: number;
 }

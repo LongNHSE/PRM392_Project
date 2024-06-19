@@ -1,5 +1,6 @@
 import {
   Body,
+  Catch,
   Controller,
   Delete,
   Get,
@@ -7,6 +8,7 @@ import {
   Param,
   Patch,
   Post,
+  UseFilters,
   UseGuards,
   UsePipes,
   ValidationPipe,
@@ -15,6 +17,7 @@ import { ActivityLevelService } from './activity_level.service';
 import { AuthGuard } from '@nestjs/passport';
 import { apiSuccess, apiFailed } from 'src/common/api-response';
 import { CreateActivityLevelDto } from './dto/create-activity-level.dto';
+import { MongoExceptionFilter } from 'src/common/validation/mongooseValidation.validation';
 
 @Controller('activity-level')
 export class ActivityLevelController {

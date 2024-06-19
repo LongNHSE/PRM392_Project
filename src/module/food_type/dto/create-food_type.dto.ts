@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsMongoId, IsNotEmpty, IsString } from 'class-validator';
 import { IsMacroGroupExisted } from 'src/module/macro_group/decorator/is-macro-group-existed';
 
 export class CreateFoodTypeDto {
@@ -7,7 +7,7 @@ export class CreateFoodTypeDto {
   name: string;
 
   @IsNotEmpty()
-  @IsString()
+  @IsMongoId()
   @IsMacroGroupExisted()
-  macroGroup: string;
+  macroGroupId: string;
 }

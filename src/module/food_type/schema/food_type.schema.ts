@@ -6,18 +6,18 @@ import { MacroGroup } from 'src/module/macro_group/schema/macro_group.schema';
   timestamps: true,
 })
 export class FoodType {
-  @Prop({ require: true })
+  @Prop({ required: true, unique: true })
   name: string;
 
   @Prop({
-    require: true,
+    required: true,
     type: mongoose.Schema.Types.ObjectId,
     ref: MacroGroup.name,
   })
-  macroGroup: MacroGroup | string | mongoose.Schema.Types.ObjectId;
+  macroGroupId: MacroGroup | string | mongoose.Schema.Types.ObjectId;
 
   @Prop({ required: false, default: false })
-  isDeleted: boolean;
+  isActive: boolean;
 }
 
 export const FoodTypeSchema = SchemaFactory.createForClass(FoodType);

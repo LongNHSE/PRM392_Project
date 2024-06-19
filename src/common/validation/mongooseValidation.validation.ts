@@ -2,7 +2,6 @@ import {
   ArgumentsHost,
   Catch,
   ExceptionFilter,
-  HttpException,
   HttpStatus,
 } from '@nestjs/common';
 import { MongoError, Document } from 'mongodb';
@@ -15,7 +14,6 @@ interface MongoErrorWithKeyValue extends MongoError {
 @Catch(MongoError)
 export class MongoExceptionFilter implements ExceptionFilter {
   catch(exception: any, host: ArgumentsHost) {
-    console.log('ASdasd');
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
     switch (exception.code) {
@@ -33,7 +31,7 @@ export class MongoExceptionFilter implements ExceptionFilter {
         // Handle other MongoDB errors
         response.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
           statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
-          message: 'Internal Server Error',
+          message: 'Internal Server Errorrrr',
           error: 'Internal Server Error',
         });
     }

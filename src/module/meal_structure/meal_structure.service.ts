@@ -21,4 +21,11 @@ export class MealStructureService {
   findOne(id: string) {
     return this.mealStructureModel.findById(id);
   }
+
+  findBySideAndMain(side: string, main: string) {
+    return this.mealStructureModel.findOne({
+      sideMealNo: side,
+      mainMealNo: main,
+    });
+  }
 }

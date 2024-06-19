@@ -4,10 +4,12 @@ import { MealController } from './meal.controller';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Meal, MealSchema } from './schema/meal.schema';
 import { IsMealExistedConstraint } from './validator/is-meal-existed.';
+import { MealFrameModule } from '../meal_frame/meal_frame.module';
 
 @Module({
   controllers: [MealController],
   imports: [
+    MealFrameModule,
     MongooseModule.forFeature([
       {
         name: Meal.name,
@@ -16,5 +18,6 @@ import { IsMealExistedConstraint } from './validator/is-meal-existed.';
     ]),
   ],
   providers: [MealService, IsMealExistedConstraint],
+  exports: [MealService],
 })
 export class MealModule {}

@@ -8,23 +8,23 @@ import { MealStructure } from 'src/module/meal_structure/schema/meal_structure.s
 })
 export class MealFrame {
   @Prop({
-    require: true,
+    required: true,
     type: mongoose.Schema.Types.ObjectId,
     ref: MealStandard.name,
   })
-  mealStandard: MealStandard | string | mongoose.Schema.Types.ObjectId;
+  mealStandardId: MealStandard | string | mongoose.Schema.Types.ObjectId;
 
   @Prop({
-    require: true,
+    required: true,
     type: mongoose.Schema.Types.ObjectId,
     ref: MealStructure.name,
   })
-  mealStructure: MealStructure | string | mongoose.Schema.Types.ObjectId;
+  mealStructureId: MealStructure | string | mongoose.Schema.Types.ObjectId;
 
-  @Prop({ require: true })
+  @Prop({ required: true })
   proportion: number;
 
-  @Prop({ require: true })
+  @Prop({ required: true })
   description: string;
 
   @Prop()

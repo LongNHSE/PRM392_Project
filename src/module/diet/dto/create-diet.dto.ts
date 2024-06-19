@@ -1,6 +1,7 @@
-import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import { IsMongoId, IsNotEmpty, IsNumber, IsString } from 'class-validator';
 import { IsActivityLevelExist } from 'src/module/activity_level/validator/is-activity-existed';
 import { IsGoalExist } from 'src/module/goal/validator/is-goal-exist';
+import { IsPreferenceExists } from 'src/module/preference/decorator/is-preference-existed';
 
 export class CreateDietDto {
   userId: string;
@@ -9,6 +10,11 @@ export class CreateDietDto {
   @IsString()
   @IsActivityLevelExist()
   activityLevelId: string;
+
+  @IsNotEmpty()
+  @IsMongoId()
+  @IsPreferenceExists()
+  preferenceId: string;
 
   @IsNotEmpty()
   @IsString()
@@ -34,4 +40,8 @@ export class CreateDietDto {
   @IsNotEmpty()
   @IsNumber()
   amountOfChange: number;
+
+  height: number;
+
+  weight: number;
 }

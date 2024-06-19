@@ -7,16 +7,16 @@ import { MacroNutrient } from 'src/module/macro_nutrient/schema/macro_nutrient.s
 })
 export class MacroGroup {
   @Prop({
-    require: true,
+    required: true,
     type: mongoose.Schema.Types.ObjectId,
     ref: MacroNutrient.name,
   })
-  macronutrient: MacroNutrient | mongoose.Schema.Types.ObjectId | string;
+  macronutrientId: MacroNutrient | mongoose.Schema.Types.ObjectId | string;
 
-  @Prop({ require: true })
+  @Prop({ required: true })
   ratio: number;
 
-  @Prop({ require: true })
+  @Prop({ required: true })
   description: string;
 
   @Prop({ required: false, default: true })

@@ -1,4 +1,12 @@
-import { Controller, Get, Post, Body, Param } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  ValidationPipe,
+  UsePipes,
+} from '@nestjs/common';
 import { MacroNutrientService } from './macro_nutrient.service';
 import { CreateMacroNutrientDto } from './dto/create-macro_nutrient.dto';
 import { apiSuccess, apiFailed } from 'src/common/api-response';
@@ -8,6 +16,9 @@ export class MacroNutrientController {
   constructor(private readonly macroNutrientService: MacroNutrientService) {}
 
   @Post()
+  @UsePipes(
+    new ValidationPipe({ whitelist: true, skipMissingProperties: false }),
+  )
   async create(@Body() createMacroNutrientDto: CreateMacroNutrientDto) {
     try {
       const result = await this.macroNutrientService.create(

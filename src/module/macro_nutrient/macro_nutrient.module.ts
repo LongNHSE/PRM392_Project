@@ -6,6 +6,7 @@ import {
   MacroNutrient,
   MacroNutrientSchema,
 } from './schema/macro_nutrient.schema';
+import { IsMacroNutrientExistedConstraint } from './decorator/is-macro-nutrient-existed';
 
 @Module({
   controllers: [MacroNutrientController],
@@ -14,6 +15,6 @@ import {
       { name: MacroNutrient.name, schema: MacroNutrientSchema },
     ]),
   ],
-  providers: [MacroNutrientService],
+  providers: [MacroNutrientService, IsMacroNutrientExistedConstraint],
 })
 export class MacroNutrientModule {}

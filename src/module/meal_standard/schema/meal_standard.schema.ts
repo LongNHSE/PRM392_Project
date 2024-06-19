@@ -4,10 +4,10 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
   timestamps: true,
 })
 export class MealStandard {
-  @Prop({ require: true })
+  @Prop({ required: true })
   name: string;
 
-  @Prop({ require: true })
+  @Prop({ required: true })
   displayTime: string;
 
   @Prop({ required: false, default: true })

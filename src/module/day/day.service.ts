@@ -3,11 +3,16 @@ import { CreateDayDto } from './dto/create-day.dto';
 import { UpdateDayDto } from './dto/update-day.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Day } from './schema/day.schema';
-import { Model } from 'mongoose';
+import mongoose, { Model } from 'mongoose';
+import { Preference } from '../preference/schema/preference.schema';
+import { Diet } from '../diet/schema/diet.schema';
 
 @Injectable()
 export class DayService {
-  constructor(@InjectModel(Day.name) private dayModel: Model<Day>) {}
+  constructor(
+    @InjectModel(Day.name) private dayModel: Model<Day>,
+    @InjectModel(Preference.name) private preferenceModel: Model<Preference>,
+  ) {}
   create(createDayDto: CreateDayDto) {
     return this.dayModel.create(createDayDto);
   }
@@ -26,5 +31,77 @@ export class DayService {
 
   remove(id: string) {
     return this.dayModel.findByIdAndUpdate(id, { isActive: false });
+  }
+
+  //Function to create day based on Diet
+  async createDayBasedOnDiet(diet: Diet) {
+    const days = [];
+    //Caculate total calories
+    const currentYear = new Date().getFullYear();
+    const totalCalories = this.totalCaloricNeed(
+      diet.users.gender,
+      diet.weight,
+      diet.height,
+      currentYear - diet.users.dob.getFullYear(),
+      diet.activity_levels.level,
+      diet.goals.sign,
+      diet.amountOfChange,
+      diet.duration,
+    );
+    try {
+      for (let i = 0; i < diet.duration * 7; i++) {
+        const day = new CreateDayDto();
+        day.totalCalstd = totalCalories;
+        day.carbohydratedstd = Math.round(
+          totalCalories * diet.preferences.carbohydrate,
+        );
+        day.fiberstd = Math.round(totalCalories * diet.preferences.fiber);
+        day.proteinstd = Math.round(totalCalories * diet.preferences.protein);
+        day.fatstd = Math.round(totalCalories * diet.preferences.fat);
+        day.waterstd = Math.round(diet.preferences.water);
+
+        day.index = i + 1;
+        day.dietId = diet._id;
+
+        const dayResult = await this.create(day);
+        days.push(dayResult);
+      }
+      return days;
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  totalCaloricNeed(
+    gender: string,
+    weight: number,
+    height: number,
+    age: number,
+    activity_level: number,
+    goal: number,
+    amount: number,
+    week: number,
+  ): number {
+    // Calculating BMR
+    let bmr = 0;
+    if (gender.toLowerCase() === 'male') {
+      // MALE
+      bmr = 66.5 + 13.75 * weight + 5.003 * height - 6.775 * age;
+    } else if (gender.toLowerCase() === 'female') {
+      // FEMALE
+      bmr = 655.1 + 9.563 * weight + 1.85 * height - 4.676 * age;
+    } else {
+      // DEFAULT
+      bmr = 655.1 + 9.563 * weight + 1.85 * height - 4.676 * age;
+    }
+
+    // Calculating AMR
+    let amr = 0;
+
+    amr = bmr * activity_level;
+
+    const CALORIES_PER_KG = 7700; // Assuming a constant value, adjust as necessary
+    const total = amr + (goal * amount * CALORIES_PER_KG) / (week * 7);
+    return Math.round(total);
   }
 }

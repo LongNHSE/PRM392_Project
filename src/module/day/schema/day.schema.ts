@@ -34,26 +34,28 @@ export class Day {
   @Prop({ required: true })
   waterstd: number;
 
-  @Prop({ required: true })
+  @Prop({ required: false, default: 0 })
   totalCal: number;
 
-  @Prop({ required: true })
+  @Prop({ required: false, default: 0 })
   carbohydrated: number;
 
-  @Prop({ required: true })
+  @Prop({ required: false, default: 0 })
   fiber: number;
 
-  @Prop({ required: true })
+  @Prop({ required: false, default: 0 })
   protein: number;
 
-  @Prop({ required: true })
+  @Prop({ required: false, default: 0 })
   fat: number;
 
-  @Prop({ required: true })
+  @Prop({ required: false, default: 0 })
   water: number;
 
   @Prop({ required: true, default: true })
   isActive: boolean;
+
+  _id: string;
 }
 
 export const DaySchema = SchemaFactory.createForClass(Day);

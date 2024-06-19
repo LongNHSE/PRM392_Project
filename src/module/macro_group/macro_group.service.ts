@@ -15,10 +15,10 @@ export class MacroGroupService {
   }
 
   findAll() {
-    return this.macroGroupModel.find().populate('macronutrient');
+    return this.macroGroupModel.find().populate('macronutrientId');
   }
 
   findOne(id: string) {
-    return this.macroGroupModel.findById(id).populate('macronutrient');
+    return this.macroGroupModel.findById(id).populate('macronutrientId');
   }
 }

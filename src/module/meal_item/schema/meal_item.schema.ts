@@ -8,20 +8,20 @@ import { MealStandard } from 'src/module/meal_standard/schema/meal_standard.sche
 })
 export class MealItem {
   @Prop({
-    require: true,
+    required: true,
     type: mongoose.Schema.Types.ObjectId,
     ref: MacroGroup.name,
   })
   macroGroup: MacroGroup | string | mongoose.Schema.Types.ObjectId;
 
   @Prop({
-    require: true,
+    required: true,
     type: mongoose.Schema.Types.ObjectId,
     ref: MealStandard.name,
   })
   mealStandard: MealStandard | string | mongoose.Schema.Types.ObjectId;
 
-  @Prop({ require: true })
+  @Prop({ required: true })
   description: string;
 
   @Prop({ required: false, default: false })

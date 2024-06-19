@@ -4,13 +4,13 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
   timestamps: true,
 })
 export class MacroNutrient {
-  @Prop({ require: true })
+  @Prop({ required: true })
   name: string;
 
-  @Prop({ require: true })
+  @Prop({ required: true })
   caloricValue: number;
 
-  @Prop({ require: true })
+  @Prop({ required: true })
   description: string;
 
   @Prop({ required: false, default: true })

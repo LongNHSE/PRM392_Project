@@ -6,6 +6,9 @@ import { Model } from 'mongoose';
 
 @Injectable()
 export class MealFrameService {
+  findAllByMealStructureId(mealStuctureId: string) {
+    return this.mealFrameModel.find({ mealStructureId: mealStuctureId });
+  }
   constructor(
     @InjectModel(MealFrame.name)
     private readonly mealFrameModel: Model<MealFrame>,

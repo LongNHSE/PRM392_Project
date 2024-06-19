@@ -31,6 +31,18 @@ export class MealStructureController {
       throw e;
     }
   }
+  @Get('/by-side-main')
+  async findBySideAndMain(@Body() body: any) {
+    try {
+      const result = await this.mealStructureService.findBySideAndMain(
+        body.side,
+        body.main,
+      );
+      return apiSuccess(200, result, 'Meal structure found successfully');
+    } catch (e) {
+      throw e;
+    }
+  }
 
   @Get(':id')
   async findOne(@Param('id') id: string) {

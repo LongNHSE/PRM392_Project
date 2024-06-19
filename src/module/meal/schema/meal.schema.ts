@@ -12,12 +12,9 @@ export class Meal {
     ref: MealFrame.name,
     required: false,
   })
-  mealFrame: MealFrame | string;
+  mealFrameId: MealFrame | string;
   @Prop({ required: true, type: mongoose.Schema.Types.ObjectId, ref: Day.name })
   dayId: Day | string;
-
-  @Prop({ required: true })
-  mealIndex: number;
 
   @Prop({ required: true })
   totalCalstd: number;
@@ -37,22 +34,22 @@ export class Meal {
   @Prop({ required: true })
   waterstd: number;
 
-  @Prop({ required: true })
+  @Prop({ required: false, default: 0 })
   totalCal: number;
 
-  @Prop({ required: true })
+  @Prop({ required: false, default: 0 })
   carbohydrated: number;
 
-  @Prop({ required: true })
+  @Prop({ required: false, default: 0 })
   fiber: number;
 
-  @Prop({ required: true })
+  @Prop({ required: false, default: 0 })
   protein: number;
 
-  @Prop({ required: true })
+  @Prop({ required: false, default: 0 })
   fat: number;
 
-  @Prop({ required: true })
+  @Prop({ required: false, default: 0 })
   water: number;
 }
 

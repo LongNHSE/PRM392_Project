@@ -4,13 +4,13 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
   timestamps: true,
 })
 export class MealStructure {
-  @Prop({ require: true })
+  @Prop({ required: true })
   mainMealNo: number;
 
-  @Prop({ require: true })
+  @Prop({ required: true })
   sideMealNo: number;
 
-  @Prop({ require: true })
+  @Prop({ required: true })
   description: string;
 
   @Prop({ required: false, default: false })

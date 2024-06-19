@@ -2,6 +2,7 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import mongoose from 'mongoose';
 import { ActivityLevel } from 'src/module/activity_level/schema/activity_level.schema';
 import { Goal } from 'src/module/goal/schema/goal.schema';
+import { Preference } from 'src/module/preference/schema/preference.schema';
 import { User } from 'src/module/user/schema/user.schema';
 
 @Schema({
@@ -16,6 +17,13 @@ export class Diet {
   userId: User | string;
 
   @Prop({
+    required: false,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: Preference.name,
+  })
+  preferenceId: Preference | string;
+
+  @Prop({
     required: true,
     type: mongoose.Schema.Types.ObjectId,
     ref: ActivityLevel.name,
@@ -28,6 +36,16 @@ export class Diet {
     ref: Goal.name,
   })
   goalId: Goal | string;
+
+  @Prop({
+    required: true,
+  })
+  height: number;
+
+  @Prop({
+    required: true,
+  })
+  weight: number;
 
   @Prop({ required: true, type: Number })
   duration: number;
@@ -49,6 +67,12 @@ export class Diet {
 
   @Prop({ required: false, default: 'active' })
   status: string;
+
+  users: User;
+  preferences: Preference;
+  goals: Goal;
+  activity_levels: ActivityLevel;
+  _id: string;
 }
 
 export const DietSchema = SchemaFactory.createForClass(Diet);

@@ -8,5 +8,6 @@ import { Bmi, BmiSchema } from './schema/bmi.schema';
   controllers: [BmiController],
   imports: [MongooseModule.forFeature([{ name: Bmi.name, schema: BmiSchema }])],
   providers: [BmiService],
+  exports: [BmiService],
 })
 export class BmiModule {}

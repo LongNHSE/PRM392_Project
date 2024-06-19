@@ -7,6 +7,14 @@ import { Model } from 'mongoose';
 
 @Injectable()
 export class FoodTypeService {
+  createMany(createFoodTypeDto: CreateFoodTypeDto[]) {
+    const result = Promise.all(
+      createFoodTypeDto.map(async (foodType) => {
+        await this.create(foodType);
+      }),
+    );
+    return result;
+  }
   constructor(
     @InjectModel(FoodType.name) private readonly foodTypeModel: Model<FoodType>,
   ) {}
@@ -23,7 +31,7 @@ export class FoodTypeService {
 
   async findAll() {
     try {
-      return await this.foodTypeModel.find().populate('macroGroup');
+      return await this.foodTypeModel.find().populate('macroGroupId');
     } catch (error) {
       console.log(error);
       return null;
@@ -31,7 +39,7 @@ export class FoodTypeService {
   }
 
   async findOne(_id: string) {
-    return (await this.foodTypeModel.findById(_id)).populated('macroGroup');
+    return (await this.foodTypeModel.findById(_id)).populated('macroGroupId');
   }
 
   async update(_id: string, updateFoodTypeDto: UpdateFoodTypeDto) {

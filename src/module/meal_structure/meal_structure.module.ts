@@ -15,5 +15,6 @@ import {
     ]),
   ],
   providers: [MealStructureService],
+  exports: [MealStructureService],
 })
 export class MealStructureModule {}

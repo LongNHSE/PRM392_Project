@@ -12,5 +12,6 @@ import { MealFrame, MealFrameSchema } from './schema/meal_frame.schema';
     ]),
   ],
   providers: [MealFrameService],
+  exports: [MealFrameService],
 })
 export class MealFrameModule {}

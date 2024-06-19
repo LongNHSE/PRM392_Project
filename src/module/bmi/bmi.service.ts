@@ -10,6 +10,10 @@ export class BmiService {
   findMyBMI(userId: string) {
     return this.bmiModel.find({ userId });
   }
+
+  findMyLatestBMI(userId: string) {
+    return this.bmiModel.findOne({ userId }).sort({ createdAt: -1 });
+  }
   constructor(@InjectModel(Bmi.name) private readonly bmiModel: Model<Bmi>) {}
 
   create(createBmiDto: CreateBmiDto, userId: string) {

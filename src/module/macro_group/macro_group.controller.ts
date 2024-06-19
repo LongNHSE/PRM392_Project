@@ -1,4 +1,13 @@
-import { Controller, Get, Post, Body, Param } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  UseFilters,
+  ValidationPipe,
+  UsePipes,
+} from '@nestjs/common';
 import { MacroGroupService } from './macro_group.service';
 import { CreateMacroGroupDto } from './dto/create-macro_group.dto';
 import { apiSuccess, apiFailed } from 'src/common/api-response';
@@ -8,6 +17,9 @@ export class MacroGroupController {
   constructor(private readonly macroGroupService: MacroGroupService) {}
 
   @Post()
+  @UsePipes(
+    new ValidationPipe({ whitelist: true, skipMissingProperties: false }),
+  )
   async create(@Body() createMacroGroupDto: CreateMacroGroupDto) {
     try {
       const result = await this.macroGroupService.create(createMacroGroupDto);

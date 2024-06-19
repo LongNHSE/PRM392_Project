@@ -3,10 +3,20 @@ import { CreateDietDto } from './dto/create-diet.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Diet } from './schema/diet.schema';
 import mongoose, { Model } from 'mongoose';
+import { BmiService } from '../bmi/bmi.service';
+import { DayService } from '../day/day.service';
+import { MealService } from '../meal/meal.service';
+import { MealStructureService } from '../meal_structure/meal_structure.service';
 
 @Injectable()
 export class DietService {
-  constructor(@InjectModel(Diet.name) private dietModel: Model<Diet>) {}
+  constructor(
+    @InjectModel(Diet.name) private dietModel: Model<Diet>,
+    private readonly bmiService: BmiService,
+    private readonly dayService: DayService,
+    private readonly mealService: MealService,
+    private readonly mealStuctureService: MealStructureService,
+  ) {}
   findAll() {
     return this.dietModel.aggregate([
       {
@@ -26,6 +36,28 @@ export class DietService {
         },
       },
       {
+        $lookup: {
+          from: 'preferences',
+          localField: 'preferenceId',
+          foreignField: '_id',
+          as: 'preferences',
+        },
+      },
+      {
+        $lookup: {
+          from: 'users',
+          localField: 'userId',
+          foreignField: '_id',
+          as: 'users',
+        },
+      },
+      {
+        $unwind: '$users',
+      },
+      {
+        $unwind: '$preferences',
+      },
+      {
         $unwind: '$goals',
       },
       {
@@ -33,10 +65,32 @@ export class DietService {
       },
     ]);
   }
-  create(createDietDto: CreateDietDto, userId: string) {
+  async create(createDietDto: CreateDietDto, userId: string) {
     try {
+      //Get height and weight from latest BMI
+      const { weight, height } = await this.bmiService.findMyLatestBMI(userId);
+
       createDietDto.userId = userId;
-      return this.dietModel.create(createDietDto);
+      createDietDto.weight = weight;
+      createDietDto.height = height;
+      const result = await this.dietModel.create(createDietDto);
+      if (result) {
+        const diet = await this.findOne(result._id.toString());
+        if (diet) {
+          const days = await this.dayService.createDayBasedOnDiet(diet[0]);
+          const mealStuctureId =
+            await this.mealStuctureService.findBySideAndMain(
+              diet[0].side,
+              diet[0].main,
+            );
+          await this.mealService.generateMeal(
+            days,
+            mealStuctureId._id.toString() as string,
+          );
+        }
+        return result;
+      }
+      return null;
     } catch (error) {
       console.error(error);
     }
@@ -60,6 +114,28 @@ export class DietService {
           foreignField: '_id',
           as: 'goals',
         },
+      },
+      {
+        $lookup: {
+          from: 'preferences',
+          localField: 'preferenceId',
+          foreignField: '_id',
+          as: 'preferences',
+        },
+      },
+      {
+        $lookup: {
+          from: 'users',
+          localField: 'userId',
+          foreignField: '_id',
+          as: 'users',
+        },
+      },
+      {
+        $unwind: '$users',
+      },
+      {
+        $unwind: '$preferences',
       },
       {
         $unwind: '$goals',
@@ -98,6 +174,28 @@ export class DietService {
           foreignField: '_id',
           as: 'goals',
         },
+      },
+      {
+        $lookup: {
+          from: 'preferences',
+          localField: 'preferenceId',
+          foreignField: '_id',
+          as: 'preferences',
+        },
+      },
+      {
+        $lookup: {
+          from: 'users',
+          localField: 'userId',
+          foreignField: '_id',
+          as: 'users',
+        },
+      },
+      {
+        $unwind: '$users',
+      },
+      {
+        $unwind: '$preferences',
       },
       {
         $unwind: '$goals',

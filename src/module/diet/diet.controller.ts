@@ -22,7 +22,7 @@ export class DietController {
 
   @Post()
   @UsePipes(
-    new ValidationPipe({ whitelist: true, skipMissingProperties: true }),
+    new ValidationPipe({ whitelist: true, skipMissingProperties: false }),
   )
   @UseGuards(AuthGuard('jwt'))
   async create(@Body() createDietDto: CreateDietDto, @GetUser() user: any) {
@@ -68,13 +68,13 @@ export class DietController {
   }
 
   @Get(':id')
-  async findOne(@GetUser() user: any, @Body() body: any) {
+  async findOne(@GetUser() user: any, @Param('id') id: string) {
     try {
-      const diet = await this.dietService.findOne(body.id);
+      const diet = await this.dietService.findOne(id);
       if (diet) {
-        return diet;
+        return apiSuccess(200, diet[0], 'Diet found successfully');
       } else {
-        return { message: 'Failed to find diet' };
+        return apiFailed(400, {}, 'Failed to find Diet');
       }
     } catch (err) {
       throw err;

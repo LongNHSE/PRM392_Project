@@ -35,6 +35,7 @@ import { MealFrameModule } from './module/meal_frame/meal_frame.module';
 import { MealItemModule } from './module/meal_item/meal_item.module';
 import { MealStandardModule } from './module/meal_standard/meal_standard.module';
 import { MealStructureModule } from './module/meal_structure/meal_structure.module';
+import { PreferenceModule } from './module/preference/preference.module';
 
 @Module({
   imports: [
@@ -81,6 +82,7 @@ import { MealStructureModule } from './module/meal_structure/meal_structure.modu
     MealItemModule,
     MealStandardModule,
     MealStructureModule,
+    PreferenceModule,
   ],
   controllers: [AppController],
   providers: [AppService],
