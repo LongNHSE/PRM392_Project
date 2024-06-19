@@ -38,6 +38,8 @@ import { MealStructureModule } from './module/meal_structure/meal_structure.modu
 import { PreferenceModule } from './module/preference/preference.module';
 import { ProductType } from './module/product_type/schema/product_type.schema';
 import { FoodFactor } from './module/food_fact/schema/food_fact.schema';
+import { ProductTypeModule } from './module/product_type/product_type.module';
+import { FoodFactorModule } from './module/food_fact/food_fact.module';
 
 @Module({
   imports: [
@@ -62,8 +64,8 @@ import { FoodFactor } from './module/food_fact/schema/food_fact.schema';
     BlogModule,
     BlogReactModule,
     PopupDetailModule,
-    ProductType,
-    FoodFactor,
+    ProductTypeModule,
+    FoodFactorModule,
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
