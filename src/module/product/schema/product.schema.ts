@@ -1,4 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import mongoose from 'mongoose';
+import { ProductType } from 'src/module/product_type/schema/product_type.schema';
 
 @Schema({
   timestamps: true,
@@ -7,8 +9,8 @@ export class Product {
   @Prop({ required: true })
   productName: string;
 
-  @Prop({ required: true })
-  type: string;
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: ProductType.name })
+  productTypeID: ProductType;
 
   @Prop({ required: true })
   price: number;

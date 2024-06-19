@@ -9,7 +9,7 @@ export class UpdateProductDto extends PartialType(CreateProductDto) {
 
   @IsOptional()
   @IsString()
-  type: string;
+  productTypeID: string;
 
   @IsOptional()
   @IsNumber()
