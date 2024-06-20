@@ -75,7 +75,7 @@ export class FoodService {
     const foodType = await this.foodTypeService.findByMacroGroupId(
       mealItem.macroGroupId as string,
     );
-
+    console.log(foodType);
     FoodDataset.forEach((food) => {
       for (let i = 0; i < foodType.length; i++) {
         if (food.typeId.toString() === foodType[i]._id.toString()) {

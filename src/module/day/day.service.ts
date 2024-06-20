@@ -52,13 +52,19 @@ export class DayService {
       for (let i = 0; i < diet.duration * 7; i++) {
         const day = new CreateDayDto();
         day.totalCalstd = totalCalories;
-        day.carbohydratedstd = Math.round(
-          totalCalories * diet.preferences.carbohydrate,
+        day.carbohydratedstd = parseFloat(
+          ((totalCalories * diet.preferences.carbohydrate) / 100).toFixed(2),
         );
-        day.fiberstd = Math.round(totalCalories * diet.preferences.fiber);
-        day.proteinstd = Math.round(totalCalories * diet.preferences.protein);
-        day.fatstd = Math.round(totalCalories * diet.preferences.fat);
-        day.waterstd = Math.round(diet.preferences.water);
+        day.fiberstd = parseFloat(
+          ((totalCalories * diet.preferences.fiber) / 100).toFixed(2),
+        );
+        day.proteinstd = parseFloat(
+          ((totalCalories * diet.preferences.protein) / 100).toFixed(2),
+        );
+        day.fatstd = parseFloat(
+          ((totalCalories * diet.preferences.fat) / 100).toFixed(2),
+        );
+        day.waterstd = parseFloat(diet.preferences.water.toFixed(2));
 
         day.index = i + 1;
         day.dietId = diet._id;

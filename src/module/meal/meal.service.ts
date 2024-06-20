@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { CreateMealDto } from './dto/create-meal.dto';
 import { UpdateMealDto } from './dto/update-meal.dto';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import mongoose, { Model } from 'mongoose';
 import { Meal } from './schema/meal.schema';
 import { Day } from '../day/schema/day.schema';
 import { MealFrameService } from '../meal_frame/meal_frame.service';
@@ -10,6 +10,19 @@ import { Diet } from '../diet/schema/diet.schema';
 
 @Injectable()
 export class MealService {
+  findBasedOnDayId(dayId: string) {
+    return this.mealModel.aggregate([
+      { $match: { dayId: new mongoose.Types.ObjectId(dayId) } },
+      {
+        $lookup: {
+          from: 'mealframes',
+          localField: 'mealFrameId',
+          foreignField: '_id',
+          as: 'mealFrame',
+        },
+      },
+    ]);
+  }
   constructor(
     @InjectModel(Meal.name) private mealModel: Model<Meal>,
     private mealFrameService: MealFrameService,
@@ -23,7 +36,7 @@ export class MealService {
   }
 
   findOne(id: string) {
-    return this.mealModel.findById(id);
+    return this.mealModel.findById(id).populate('mealFrameId');
   }
 
   update(id: string, updateMealDto: UpdateMealDto) {
@@ -57,12 +70,16 @@ export class MealService {
 
         const proportion = mealFrame.proportion;
 
-        const totalCalstd = Math.round(totalCalstd_day * proportion);
-        const carbohydratestd = Math.round(carbohydratestd_day * proportion);
-        const fiberstd = Math.round(fiberstd_day * proportion);
-        const proteinstd = Math.round(proteinstd_day * proportion);
-        const fatstd = Math.round(fatstd_day * proportion);
-        const waterstd = Math.round(waterstd_day * proportion);
+        const totalCalstd = parseFloat(
+          (totalCalstd_day * proportion).toFixed(2),
+        );
+        const carbohydratestd = parseFloat(
+          (carbohydratestd_day * proportion).toFixed(2),
+        );
+        const fiberstd = parseFloat((fiberstd_day * proportion).toFixed(2));
+        const proteinstd = parseFloat((proteinstd_day * proportion).toFixed(2));
+        const fatstd = parseFloat((fatstd_day * proportion).toFixed(2));
+        const waterstd = parseFloat((waterstd_day * proportion).toFixed(2));
 
         const meal = new Meal();
         meal.totalCalstd = totalCalstd;

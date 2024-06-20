@@ -47,6 +47,22 @@ export class FoodDetailController {
     }
   }
 
+  @Get('meal/:id')
+  async findAllFoodDetailBasedOnMealId(@Param('id') mealId: string) {
+    try {
+      const foodDetail =
+        await this.foodDetailService.findAllFoodDetailsBasedOnMealId(mealId);
+      if (foodDetail) {
+        return apiSuccess(200, foodDetail, 'Food Detail found successfully');
+      } else {
+        return apiFailed(400, {}, 'Failed to find Food Detail');
+      }
+    } catch (err) {
+      console.log(err);
+      return apiFailed(400, {}, 'Failed to find Food Detail');
+    }
+  }
+
   @Get(':id')
   async findOne(@Param('id') id: string) {
     try {

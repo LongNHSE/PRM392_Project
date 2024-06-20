@@ -21,6 +21,8 @@ import {
 } from '../meal_standard/schema/meal_standard.schema';
 import { MealItem, MealItemSchema } from '../meal_item/schema/meal_item.schema';
 import { FoodModule } from '../food/food.module';
+import { Meal, MealSchema } from '../meal/schema/meal.schema';
+import { Day, DaySchema } from '../day/schema/day.schema';
 
 @Module({
   controllers: [FoodDetailController],
@@ -47,6 +49,8 @@ import { FoodModule } from '../food/food.module';
     MongooseModule.forFeature([
       { name: MealItem.name, schema: MealItemSchema },
     ]),
+    MongooseModule.forFeature([{ name: Meal.name, schema: MealSchema }]),
+    MongooseModule.forFeature([{ name: Day.name, schema: DaySchema }]),
   ],
   providers: [FoodDetailService],
   exports: [FoodDetailService],

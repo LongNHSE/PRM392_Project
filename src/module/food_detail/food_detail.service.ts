@@ -3,7 +3,7 @@ import { CreateFoodDetailDto } from './dto/create-food_detail.dto';
 import { UpdateFoodDetailDto } from './dto/update-food_detail.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { FoodDetail } from './schema/food_detail.schema';
-import { Model } from 'mongoose';
+import mongoose, { Model } from 'mongoose';
 import { Food } from '../food/schema/food.schema';
 import { Meal } from '../meal/schema/meal.schema';
 import { MacroGroup } from '../macro_group/schema/macro_group.schema';
@@ -13,10 +13,79 @@ import { MealFrame } from '../meal_frame/schema/meal_frame.schema';
 import { MealStandard } from '../meal_standard/schema/meal_standard.schema';
 import { FoodService } from '../food/food.service';
 import { Day } from '../day/schema/day.schema';
-import { printTable, transpose } from 'src/util/util';
+import { transpose } from 'src/util/util';
 
 @Injectable()
 export class FoodDetailService {
+  findAllFoodDetailsBasedOnMealId(mealId: string) {
+    return this.foodDetailModel.aggregate([
+      { $match: { mealId: new mongoose.Types.ObjectId(mealId) } },
+      {
+        $lookup: {
+          from: 'foods',
+          localField: 'foodId',
+          foreignField: '_id',
+          //Lookup foodtype in foods
+          // pipeline: [
+          //   {
+          //     $lookup: {
+          //       from: 'foodtypes',
+          //       localField: 'typeId',
+          //       foreignField: '_id',
+          //       as: 'foodType',
+          //     },
+          //   },
+          //   {
+          //     $unwind: '$foodType',
+          //   },
+          // ],
+          as: 'food',
+        },
+      },
+      {
+        $unwind: '$food',
+      },
+      {
+        $lookup: {
+          from: 'foodtypes',
+          localField: 'food.typeId',
+          foreignField: '_id',
+          as: 'foodType',
+        },
+      },
+      {
+        $unwind: '$foodType',
+      },
+      {
+        $lookup: {
+          from: 'macrogroups',
+          localField: 'foodType.macroGroupId',
+          foreignField: '_id',
+          as: 'macroGroup',
+        },
+      },
+      {
+        $unwind: {
+          path: '$macroGroup',
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      {
+        $lookup: {
+          from: 'macronutrients',
+          localField: 'macroGroup.macronutrientId',
+          foreignField: '_id',
+          as: 'macroNutrient',
+        },
+      },
+      {
+        $unwind: {
+          path: '$macroNutrient',
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+    ]);
+  }
   readonly CARBOHYDRATE_TO_KCAL = 4;
   readonly PROTEIN_TO_KCAL = 4;
   readonly FAT_TO_KCAL = 9;
@@ -29,6 +98,8 @@ export class FoodDetailService {
     @InjectModel(MealStandard.name)
     private mealStandardModel: Model<MealStandard>,
     @InjectModel(MealItem.name) private mealItemModel: Model<MealItem>,
+    @InjectModel(Day.name) private dayModel: Model<Day>,
+    @InjectModel(Meal.name) private mealModel: Model<Meal>,
     private readonly foodService: FoodService,
   ) {}
   create(createFoodDetailDto: CreateFoodDetailDto) {
@@ -124,7 +195,6 @@ export class FoodDetailService {
       case 'fiber':
         nutrient = meal.fiberstd;
         baseNutrient = food.fiber;
-        console.log('fiber', nutrient, baseNutrient);
         break;
 
       case 'protein':
@@ -143,52 +213,34 @@ export class FoodDetailService {
         break;
 
       default:
-        console.log('default', nutrient, baseNutrient);
         break;
     }
     const calories = parseFloat(
       (nutrient * macroGroup.ratio * macroGroup.relativeEst).toFixed(3),
     );
-    const ratio = parseFloat(
-      (calories / (baseNutrient * macroNutrient.caloricValue)).toFixed(3),
-    );
-    if (food._id.toString() === '6672b200e220b5db05a1c55c') {
-      console.log(calories / (baseNutrient * macroNutrient.caloricValue));
-      console.log(
-        Math.floor(calories / (baseNutrient * macroNutrient.caloricValue)),
-      );
-
-      console.log({
-        calories,
-        baseNutrient,
-        caloricValue: macroNutrient.caloricValue,
-        ratio,
-        size: food.size,
-        caloricIntake: food.caloricintake,
-        carbohydrate: food.carbohydrate,
-        fiber: food.fiber,
-        protein: food.protein,
-        fat: food.fat,
-        water: food.water,
-        icon: food.icon,
-        description: food.description,
-        mealId: meal._id,
-      });
+    let caloricValue = macroNutrient.caloricValue;
+    if (caloricValue === 0) {
+      caloricValue = 1;
     }
+
+    const ratio = parseFloat(
+      (calories / (baseNutrient * caloricValue)).toFixed(3),
+    );
+
     foodDetail.foodId = food._id;
-    foodDetail.amount = Math.floor(ratio * food.size);
-    foodDetail.totalCal = Math.floor(ratio * food.caloricintake);
-    foodDetail.carborhydrated = Math.floor(ratio * food.carbohydrate);
-    foodDetail.fiber = Math.floor(ratio * food.fiber);
-    foodDetail.protein = Math.floor(ratio * food.protein);
-    foodDetail.fat = Math.floor(ratio * food.fat);
-    foodDetail.water = Math.floor(ratio * food.water);
+    foodDetail.amount = parseFloat((ratio * food.size).toFixed(2));
+    foodDetail.totalCal = parseFloat((ratio * food.caloricintake).toFixed(2));
+    foodDetail.carborhydrated = parseFloat(
+      (ratio * food.carbohydrate).toFixed(2),
+    );
+    foodDetail.fiber = parseFloat((ratio * food.fiber).toFixed(2));
+    foodDetail.protein = parseFloat((ratio * food.protein).toFixed(2));
+    foodDetail.fat = parseFloat((ratio * food.fat).toFixed(2));
+    foodDetail.water = parseFloat((ratio * food.water).toFixed(2));
     foodDetail.icon = food.icon;
     foodDetail.description = food.description;
     foodDetail.mealId = meal._id;
-    if (food._id.toString() === '6672b200e220b5db05a1c55c') {
-      console.log(foodDetail);
-    }
+    console.log('foodDetail', foodDetail);
     return foodDetail;
   }
   async generateLoadsOfFoodDetail(
@@ -245,14 +297,14 @@ export class FoodDetailService {
       foodDetails.push(
         await this.generateLoadsOfFoodDetail(
           allApplicableFood,
-          meals[i],
+          meals[i][0],
           numOfDay,
         ),
       );
     }
     for (let j = 0; j < numOfMeal; j++) {
       const mealFrame: MealFrame = await this.mealFrameModel.findById(
-        meals[j].mealFrameId,
+        meals[j][0].mealFrameId,
       );
       const mealStandard: MealStandard = await this.mealStandardModel.findById(
         mealFrame.mealStandardId,
@@ -264,7 +316,7 @@ export class FoodDetailService {
 
       for (let i = 0; i < numOfDay; i++) {
         for (let k = 0; k < mealItems.length; k++) {
-          const mealId = meals[j]._id;
+          const mealId = meals[j][i]._id;
           foodDetails[j][i][k].mealId = mealId;
         }
       }
@@ -298,6 +350,10 @@ export class FoodDetailService {
         meals[i].fat = totalFatMeal;
         meals[i].water = totalWaterMeal;
 
+        // await this.mealModel.findByIdAndUpdate(meals[i]._id, meals[i], {
+        //   new: true,
+        // });
+
         totalCaloriesMeal = 0;
         totalCarbohydratesMeal = 0;
         totalFiberMeal = 0;
@@ -329,6 +385,8 @@ export class FoodDetailService {
       days[i].protein = totalProteinDay;
       days[i].fat = totalFatDay;
       days[i].water = totalWaterDay;
+
+      // await this.dayModel.findByIdAndUpdate(days[i]._id, days[i]);
 
       totalCaloriesDay = 0;
       totalCarbohydratesDay = 0;

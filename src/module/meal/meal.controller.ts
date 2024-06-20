@@ -38,6 +38,17 @@ export class MealController {
     }
   }
 
+  @Get('day/:id')
+  async findBasedOnDayId(@Param('id') dayId: string) {
+    try {
+      const result = await this.mealService.findBasedOnDayId(dayId);
+      if (result) return apiSuccess(200, result, 'Meal found successfully');
+      else return apiFailed(400, {}, 'Failed to find Meal');
+    } catch (e) {
+      return apiFailed(400, {}, 'Failed to find Meal');
+    }
+  }
+
   @Get(':id')
   async findOne(@Param('id') id: string) {
     try {

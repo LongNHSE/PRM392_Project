@@ -93,11 +93,7 @@ export class DietService {
             mealStuctureId._id.toString() as string,
           );
           const foods = await this.foodModel.find();
-          await this.foodDetailService.generateFoodDetail_2(
-            foods,
-            meals[0],
-            days,
-          );
+          await this.foodDetailService.generateFoodDetail_2(foods, meals, days);
         }
         return result;
       }
