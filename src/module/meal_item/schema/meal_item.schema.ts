@@ -12,14 +12,14 @@ export class MealItem {
     type: mongoose.Schema.Types.ObjectId,
     ref: MacroGroup.name,
   })
-  macroGroup: MacroGroup | string | mongoose.Schema.Types.ObjectId;
+  macroGroupId: MacroGroup | string | mongoose.Schema.Types.ObjectId;
 
   @Prop({
     required: true,
     type: mongoose.Schema.Types.ObjectId,
     ref: MealStandard.name,
   })
-  mealStandard: MealStandard | string | mongoose.Schema.Types.ObjectId;
+  mealStandardId: MealStandard | string | mongoose.Schema.Types.ObjectId;
 
   @Prop({ required: true })
   description: string;

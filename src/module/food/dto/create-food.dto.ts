@@ -21,7 +21,7 @@ export class CreateFoodDto {
 
   @IsNotEmpty()
   @IsNumber()
-  carbonhydrate: number;
+  carbohydrate: number;
 
   @IsNotEmpty()
   @IsNumber()

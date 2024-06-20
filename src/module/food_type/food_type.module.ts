@@ -16,5 +16,6 @@ import { IsFoodTypeExistedConstraint } from './validator/is-food-existed';
     ]),
   ],
   providers: [FoodTypeService, IsFoodTypeExistedConstraint],
+  exports: [FoodTypeService],
 })
 export class FoodTypeModule {}

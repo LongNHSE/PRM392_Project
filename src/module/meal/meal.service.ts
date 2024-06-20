@@ -78,9 +78,9 @@ export class MealService {
       meals.push(mealPerMeal);
       mealPerMeal = [];
     });
-    meals.forEach(async (meal) => {
-      await this.mealModel.create(meal);
-    });
-    return meals;
+    const mealsResult: any[] = await Promise.all(
+      meals.map((meal) => this.mealModel.create(meal)),
+    );
+    return mealsResult;
   }
 }

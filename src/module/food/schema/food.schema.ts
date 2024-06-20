@@ -18,7 +18,7 @@ export class Food {
   caloricintake: number;
 
   @Prop({ required: true })
-  carbonhydrate: number;
+  carbohydrate: number;
 
   @Prop({ required: true })
   fiber: number;
@@ -40,6 +40,8 @@ export class Food {
 
   @Prop({ required: false, default: true })
   isActive: boolean;
+
+  _id: string;
 }
 
 export const FoodSchema = SchemaFactory.createForClass(Food);

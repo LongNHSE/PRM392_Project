@@ -4,6 +4,8 @@ import { UpdateFoodDto } from './dto/update-food.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Food } from './schema/food.schema';
 import mongoose, { Model } from 'mongoose';
+import { MealItem } from '../meal_item/schema/meal_item.schema';
+import { FoodTypeService } from '../food_type/food_type.service';
 
 @Injectable()
 export class FoodService {
@@ -12,6 +14,7 @@ export class FoodService {
   }
   constructor(
     @InjectModel(Food.name) private readonly foodModel: Model<Food>,
+    private readonly foodTypeService: FoodTypeService,
   ) {}
   async create(createFoodDto: CreateFoodDto) {
     try {
@@ -61,5 +64,25 @@ export class FoodService {
 
   remove(id: number) {
     return `This action removes a #${id} food`;
+  }
+
+  async findFoodByType(typeId: string) {
+    return await this.foodModel.find({ typeId });
+  }
+
+  async findFoodByCaterory(FoodDataset: Food[], mealItem: MealItem) {
+    const foodList: Food[] = [];
+    const foodType = await this.foodTypeService.findByMacroGroupId(
+      mealItem.macroGroupId as string,
+    );
+
+    FoodDataset.forEach((food) => {
+      for (let i = 0; i < foodType.length; i++) {
+        if (food.typeId.toString() === foodType[i]._id.toString()) {
+          foodList.push(food);
+        }
+      }
+    });
+    return foodList;
   }
 }

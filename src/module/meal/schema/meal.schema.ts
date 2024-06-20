@@ -51,6 +51,8 @@ export class Meal {
 
   @Prop({ required: false, default: 0 })
   water: number;
+
+  _id: string;
 }
 
 export const MealSchema = SchemaFactory.createForClass(Meal);

@@ -3,10 +3,8 @@ import {
   Get,
   Post,
   Body,
-  Param,
-  UseFilters,
-  ValidationPipe,
-  UsePipes,
+  Param, ValidationPipe,
+  UsePipes
 } from '@nestjs/common';
 import { MacroGroupService } from './macro_group.service';
 import { CreateMacroGroupDto } from './dto/create-macro_group.dto';

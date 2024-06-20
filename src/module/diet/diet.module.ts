@@ -7,8 +7,10 @@ import { IsDietExistsConstraint } from './validator/is-diet-exist';
 import { BmiModule } from '../bmi/bmi.module';
 import { DayModule } from '../day/day.module';
 import { MealModule } from '../meal/meal.module';
-import { MealStructureService } from '../meal_structure/meal_structure.service';
 import { MealStructureModule } from '../meal_structure/meal_structure.module';
+import { FoodDetailModule } from '../food_detail/food_detail.module';
+import { FoodModule } from '../food/food.module';
+import { Food, FoodSchema } from '../food/schema/food.schema';
 
 @Module({
   controllers: [DietController],
@@ -17,7 +19,9 @@ import { MealStructureModule } from '../meal_structure/meal_structure.module';
     MealStructureModule,
     BmiModule,
     MealModule,
+    FoodDetailModule,
     MongooseModule.forFeature([{ name: Diet.name, schema: DietSchema }]),
+    MongooseModule.forFeature([{ name: Food.name, schema: FoodSchema }]),
   ],
   providers: [DietService, IsDietExistsConstraint],
 })

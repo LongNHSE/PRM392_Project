@@ -23,7 +23,7 @@ export class UpdateFoodDto extends PartialType(CreateFoodDto) {
 
   @IsOptional()
   @IsNumber()
-  carbonhydrate: number;
+  carbohydrate: number;
 
   @IsOptional()
   @IsNumber()
