@@ -17,13 +17,13 @@ export class Blog {
   numRating: number;
 
   @Prop({ type: [String] })
-  ingredient: string[];
+  ingredients: string[];
 
   @Prop({ type: [String] })
-  direction: string[];
+  directions: string[];
 
   @Prop({ type: [String] })
-  imageList: string[];
+  images: string[];
 
   @Prop({ default: Date.now })
   createdDate: Date;

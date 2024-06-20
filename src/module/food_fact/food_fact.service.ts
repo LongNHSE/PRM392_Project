@@ -29,8 +29,8 @@ export class FoodFactorService {
     }
   }
 
-  async findOne(id: string) {
-    return await this.foodFactorModel.findById(id);
+  findOne(id: string) {
+    return this.foodFactorModel.findById(id);
   }
 
   async update(id: string, updateFoodFactorDto: UpdateFoodFactorDto) {

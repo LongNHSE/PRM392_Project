@@ -222,10 +222,14 @@ export class FoodDetailService {
     if (caloricValue === 0) {
       caloricValue = 1;
     }
-
-    const ratio = parseFloat(
+    console.log('calories', caloricValue);
+    let ratio = parseFloat(
       (calories / (baseNutrient * caloricValue)).toFixed(3),
     );
+    if (isNaN(ratio)) {
+      ratio = 1;
+      console.log('ratio is NaN', ratio);
+    }
 
     foodDetail.foodId = food._id;
     foodDetail.amount = parseFloat((ratio * food.size).toFixed(2));
@@ -240,7 +244,7 @@ export class FoodDetailService {
     foodDetail.icon = food.icon;
     foodDetail.description = food.description;
     foodDetail.mealId = meal._id;
-    console.log('foodDetail', foodDetail);
+    console.log(parseFloat((0).toFixed(2)));
     return foodDetail;
   }
   async generateLoadsOfFoodDetail(
@@ -343,16 +347,20 @@ export class FoodDetailService {
           totalWaterMeal += foodDetails[i][j][k].water;
         }
 
-        meals[i].totalCal = totalCaloriesMeal;
-        meals[i].carbohydrated = totalCarbohydratesMeal;
-        meals[i].fiber = totalFiberMeal;
-        meals[i].protein = totalProteinMeal;
-        meals[i].fat = totalFatMeal;
-        meals[i].water = totalWaterMeal;
+        meals[i].totalCal = parseFloat(totalCaloriesMeal.toFixed(2));
+        meals[i].carbohydrated = parseFloat(totalCarbohydratesMeal.toFixed(2));
+        meals[i].fiber = parseFloat(totalFiberMeal.toFixed(2));
+        meals[i].protein = parseFloat(totalProteinMeal.toFixed(2));
+        meals[i].fat = parseFloat(totalFatMeal.toFixed(2));
+        meals[i].water = parseFloat(totalWaterMeal.toFixed(2));
 
-        // await this.mealModel.findByIdAndUpdate(meals[i]._id, meals[i], {
-        //   new: true,
-        // });
+        await this.mealModel.findByIdAndUpdate(
+          meals[i]._id,
+          { ...meals[i] },
+          {
+            new: true,
+          },
+        );
 
         totalCaloriesMeal = 0;
         totalCarbohydratesMeal = 0;
@@ -379,14 +387,14 @@ export class FoodDetailService {
         totalFatDay += meals[j].fat;
         totalWaterDay += meals[j].water;
       }
-      days[i].totalCal = totalCaloriesDay;
-      days[i].carbohydrated = totalCarbohydratesDay;
-      days[i].fiber = totalFiberDay;
-      days[i].protein = totalProteinDay;
-      days[i].fat = totalFatDay;
-      days[i].water = totalWaterDay;
+      days[i].totalCal = parseFloat(totalCaloriesDay.toFixed(2));
+      days[i].carbohydrated = parseFloat(totalCarbohydratesDay.toFixed(2));
+      days[i].fiber = parseFloat(totalFiberDay.toFixed(2));
+      days[i].protein = parseFloat(totalProteinDay.toFixed(2));
+      days[i].fat = parseFloat(totalFatDay.toFixed(2));
+      days[i].water = parseFloat(totalWaterDay.toFixed(2));
 
-      // await this.dayModel.findByIdAndUpdate(days[i]._id, days[i]);
+      await this.dayModel.findByIdAndUpdate(days[i]._id, { ...days[i] });
 
       totalCaloriesDay = 0;
       totalCarbohydratesDay = 0;
