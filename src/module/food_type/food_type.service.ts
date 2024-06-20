@@ -7,6 +7,9 @@ import { Model } from 'mongoose';
 
 @Injectable()
 export class FoodTypeService {
+  findByMacroGroupId(arg0: string) {
+    return this.foodTypeModel.find({ macroGroupId: arg0 });
+  }
   createMany(createFoodTypeDto: CreateFoodTypeDto[]) {
     const result = Promise.all(
       createFoodTypeDto.map(async (foodType) => {

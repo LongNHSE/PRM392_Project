@@ -20,7 +20,7 @@ export class PreferenceController {
 
   @Post()
   @UsePipes(
-    new ValidationPipe({ whitelist: true, skipMissingProperties: true }),
+    new ValidationPipe({ whitelist: true, skipMissingProperties: false }),
   )
   async create(@Body() createPreferenceDto: CreatePreferenceDto) {
     try {

@@ -7,15 +7,20 @@ import { BmiService } from '../bmi/bmi.service';
 import { DayService } from '../day/day.service';
 import { MealService } from '../meal/meal.service';
 import { MealStructureService } from '../meal_structure/meal_structure.service';
+import { FoodDetailService } from '../food_detail/food_detail.service';
+import { FoodService } from '../food/food.service';
+import { Food } from '../food/schema/food.schema';
 
 @Injectable()
 export class DietService {
   constructor(
     @InjectModel(Diet.name) private dietModel: Model<Diet>,
+    @InjectModel(Food.name) private foodModel: Model<Food>,
     private readonly bmiService: BmiService,
     private readonly dayService: DayService,
     private readonly mealService: MealService,
     private readonly mealStuctureService: MealStructureService,
+    private readonly foodDetailService: FoodDetailService,
   ) {}
   findAll() {
     return this.dietModel.aggregate([
@@ -83,9 +88,15 @@ export class DietService {
               diet[0].side,
               diet[0].main,
             );
-          await this.mealService.generateMeal(
+          const meals = await this.mealService.generateMeal(
             days,
             mealStuctureId._id.toString() as string,
+          );
+          const foods = await this.foodModel.find();
+          await this.foodDetailService.generateFoodDetail_2(
+            foods,
+            meals[0],
+            days,
           );
         }
         return result;

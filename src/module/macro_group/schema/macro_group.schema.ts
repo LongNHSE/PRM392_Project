@@ -17,6 +17,9 @@ export class MacroGroup {
   ratio: number;
 
   @Prop({ required: true })
+  relativeEst: number;
+
+  @Prop({ required: true })
   description: string;
 
   @Prop({ required: false, default: true })

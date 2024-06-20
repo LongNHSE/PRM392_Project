@@ -12,6 +12,8 @@ export class MealStandard {
 
   @Prop({ required: false, default: true })
   isActive: boolean;
+
+  _id: string;
 }
 
 export const MealStandardSchema = SchemaFactory.createForClass(MealStandard);
