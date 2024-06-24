@@ -21,6 +21,34 @@ export class MealService {
           as: 'mealFrame',
         },
       },
+      {
+        $unwind: '$mealFrame',
+      },
+      {
+        $lookup: {
+          from: 'mealstandards',
+          localField: 'mealFrame.mealStandardId',
+          foreignField: '_id',
+          as: 'mealStandard',
+        },
+      },
+      {
+        $unwind: '$mealStandard',
+      },
+      {
+        $lookup: {
+          from: 'mealstructures',
+          localField: 'mealFrame.mealStructureId',
+          foreignField: '_id',
+          as: 'mealStructure',
+        },
+      },
+      {
+        $unwind: {
+          path: '$mealStructure',
+          preserveNullAndEmptyArrays: true,
+        },
+      },
     ]);
   }
   constructor(

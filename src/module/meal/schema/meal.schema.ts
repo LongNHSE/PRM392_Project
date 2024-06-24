@@ -13,6 +13,7 @@ export class Meal {
     required: false,
   })
   mealFrameId: MealFrame | string;
+
   @Prop({ required: true, type: mongoose.Schema.Types.ObjectId, ref: Day.name })
   dayId: Day | string;
 
