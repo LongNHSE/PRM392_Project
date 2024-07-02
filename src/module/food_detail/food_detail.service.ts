@@ -25,20 +25,6 @@ export class FoodDetailService {
           from: 'foods',
           localField: 'foodId',
           foreignField: '_id',
-          //Lookup foodtype in foods
-          // pipeline: [
-          //   {
-          //     $lookup: {
-          //       from: 'foodtypes',
-          //       localField: 'typeId',
-          //       foreignField: '_id',
-          //       as: 'foodType',
-          //     },
-          //   },
-          //   {
-          //     $unwind: '$foodType',
-          //   },
-          // ],
           as: 'food',
         },
       },
@@ -346,21 +332,17 @@ export class FoodDetailService {
           totalFatMeal += foodDetails[i][j][k].fat * this.FAT_TO_KCAL;
           totalWaterMeal += foodDetails[i][j][k].water;
         }
-
-        meals[i].totalCal = parseFloat(totalCaloriesMeal.toFixed(2));
-        meals[i].carbohydrated = parseFloat(totalCarbohydratesMeal.toFixed(2));
-        meals[i].fiber = parseFloat(totalFiberMeal.toFixed(2));
-        meals[i].protein = parseFloat(totalProteinMeal.toFixed(2));
-        meals[i].fat = parseFloat(totalFatMeal.toFixed(2));
-        meals[i].water = parseFloat(totalWaterMeal.toFixed(2));
-
-        await this.mealModel.findByIdAndUpdate(
-          meals[i]._id,
-          { ...meals[i] },
-          {
-            new: true,
-          },
+        meals[i][j].totalCal = parseFloat(totalCaloriesMeal.toFixed(2));
+        meals[i][j].carbohydrated = parseFloat(
+          totalCarbohydratesMeal.toFixed(2),
         );
+        meals[i][j].fiber = parseFloat(totalFiberMeal.toFixed(2));
+        meals[i][j].protein = parseFloat(totalProteinMeal.toFixed(2));
+        meals[i][j].fat = parseFloat(totalFatMeal.toFixed(2));
+        meals[i][j].water = parseFloat(totalWaterMeal.toFixed(2));
+        await this.mealModel.findByIdAndUpdate(meals[i][j]._id, {
+          ...meals[i][j],
+        });
 
         totalCaloriesMeal = 0;
         totalCarbohydratesMeal = 0;

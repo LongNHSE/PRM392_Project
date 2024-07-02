@@ -74,7 +74,13 @@ export class DietService {
     try {
       //Get height and weight from latest BMI
       const { weight, height } = await this.bmiService.findMyLatestBMI(userId);
-
+      const mealStuctureId = await this.mealStuctureService.findBySideAndMain(
+        createDietDto.side.toString(),
+        createDietDto.main.toString(),
+      );
+      if (!mealStuctureId) {
+        return null;
+      }
       createDietDto.userId = userId;
       createDietDto.weight = weight;
       createDietDto.height = height;
@@ -83,11 +89,7 @@ export class DietService {
         const diet = await this.findOne(result._id.toString());
         if (diet) {
           const days = await this.dayService.createDayBasedOnDiet(diet[0]);
-          const mealStuctureId =
-            await this.mealStuctureService.findBySideAndMain(
-              diet[0].side,
-              diet[0].main,
-            );
+
           const meals = await this.mealService.generateMeal(
             days,
             mealStuctureId._id.toString() as string,

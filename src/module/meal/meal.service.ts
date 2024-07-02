@@ -6,7 +6,7 @@ import mongoose, { Model } from 'mongoose';
 import { Meal } from './schema/meal.schema';
 import { Day } from '../day/schema/day.schema';
 import { MealFrameService } from '../meal_frame/meal_frame.service';
-import { Diet } from '../diet/schema/diet.schema';
+import { FoodDetailService } from '../food_detail/food_detail.service';
 
 @Injectable()
 export class MealService {
@@ -53,6 +53,7 @@ export class MealService {
   }
   constructor(
     @InjectModel(Meal.name) private mealModel: Model<Meal>,
+    private foodDetailService: FoodDetailService,
     private mealFrameService: MealFrameService,
   ) {}
   create(createMealDto: CreateMealDto) {
@@ -63,8 +64,13 @@ export class MealService {
     return this.mealModel.find();
   }
 
-  findOne(id: string) {
-    return this.mealModel.findById(id).populate('mealFrameId');
+  async findOne(id: string) {
+    const result = await this.mealModel.findById(id).populate('mealFrameId');
+    if (result) {
+      const foodDetails =
+        await this.foodDetailService.findAllFoodDetailsBasedOnMealId(id);
+      return { ...result.toJSON(), foodDetails };
+    }
   }
 
   update(id: string, updateMealDto: UpdateMealDto) {
