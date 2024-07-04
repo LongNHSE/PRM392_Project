@@ -65,6 +65,20 @@ export class DayController {
       return apiFailed(400, {}, 'Failed to find Day');
     }
   }
+  @Get('/diet/:id/size')
+  async findSizeBasedonDietId(@Param('id') id: string) {
+    try {
+      const day = await this.dayService.findSizeBasedonDietId(id);
+      if (day) {
+        return apiSuccess(200, day, 'Day found successfully');
+      } else {
+        return apiFailed(400, {}, 'Failed to find Day');
+      }
+    } catch (err) {
+      console.log(err);
+      return apiFailed(400, {}, 'Failed to find Day');
+    }
+  }
   @Get(':id')
   async findOne(@Param('id') id: string) {
     try {

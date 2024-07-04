@@ -12,6 +12,10 @@ export class DayService {
   findAllBasedonDietIdAndIndex(id: string, index: number) {
     return this.dayModel.find({ dietId: id, index: index });
   }
+
+  async findSizeBasedonDietId(id: string) {
+    return await this.dayModel.countDocuments({ dietId: id });
+  }
   constructor(
     @InjectModel(Day.name) private dayModel: Model<Day>,
     @InjectModel(Preference.name) private preferenceModel: Model<Preference>,
