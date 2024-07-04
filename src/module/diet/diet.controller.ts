@@ -15,8 +15,15 @@ import { CreateDietDto } from './dto/create-diet.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { GetUser } from '../auth/decorator';
 import { apiSuccess, apiFailed } from 'src/common/api-response';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 
 @Controller('diet')
+@ApiTags('diet')
 export class DietController {
   constructor(private readonly dietService: DietService) {}
 
@@ -25,6 +32,10 @@ export class DietController {
     new ValidationPipe({ whitelist: true, skipMissingProperties: false }),
   )
   @UseGuards(AuthGuard('jwt'))
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Create diet' })
+  @ApiResponse({ status: 202, description: 'Diet created successfully' })
+  @ApiResponse({ status: 400, description: 'Failed to create Diet' })
   async create(@Body() createDietDto: CreateDietDto, @GetUser() user: any) {
     try {
       const diet = await this.dietService.create(createDietDto, user.userId);

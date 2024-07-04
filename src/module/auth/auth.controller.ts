@@ -23,7 +23,9 @@ import { UserService } from '../user/user.service';
 import { OtpService } from '../otp/otp.service';
 import { Response } from 'express';
 import { apiSuccess, apiFailed } from 'src/common/api-response';
+import { ApiTags } from '@nestjs/swagger';
 @Controller('auth')
+@ApiTags('auth')
 export class AuthController {
   constructor(
     private authService: AuthService,
