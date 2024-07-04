@@ -65,12 +65,24 @@ export class MealService {
   }
 
   async findOne(id: string) {
-    const result = await this.mealModel.findById(id).populate('mealFrameId');
-    if (result) {
+    const result = await this.mealModel.aggregate([
+      { $match: { _id: new mongoose.Types.ObjectId(id) } },
+      {
+        $lookup: {
+          from: 'mealframes', // Assuming 'mealFrames' is the collection name for mealFrameId references
+          localField: 'mealFrameId',
+          foreignField: '_id',
+          as: 'mealFrame',
+        },
+      },
+      { $unwind: '$mealFrame' }, // Optional: Use if you're sure there's only one mealFrame per meal
+    ]);
+    if (result.length > 0) {
       const foodDetails =
         await this.foodDetailService.findAllFoodDetailsBasedOnMealId(id);
-      return { ...result.toJSON(), foodDetails };
+      return { ...result[0], foodDetails };
     }
+    return null;
   }
 
   update(id: string, updateMealDto: UpdateMealDto) {

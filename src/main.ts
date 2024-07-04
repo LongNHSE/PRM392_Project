@@ -2,12 +2,22 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { useContainer } from 'class-validator';
 import { MongoExceptionFilter } from './common/validation/mongooseValidation.validation';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   await app.enableCors();
   // app.useGlobalPipes(new CustomValidationPipe());
   app.useGlobalFilters(new MongoExceptionFilter()); // Use Mongo exception filter
+
+  const config = new DocumentBuilder()
+    .setTitle('Cats example')
+    .setDescription('The cats API description')
+    .setVersion('1.0')
+    .addTag('cats')
+    .build();
+  const document = SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('api', app, document);
   // app.useGlobalFilters(new HttpExceptionFilter()); // Use validation pipe
 
   // Configure the class-validator and class-transformer libraries to use the NestJS dependency injection container.
