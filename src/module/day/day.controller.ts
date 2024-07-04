@@ -8,6 +8,7 @@ import {
   Delete,
   UsePipes,
   ValidationPipe,
+  Query,
 } from '@nestjs/common';
 import { DayService } from './day.service';
 import { CreateDayDto } from './dto/create-day.dto';
@@ -47,7 +48,23 @@ export class DayController {
       return apiFailed(400, {}, 'Failed to find Day');
     }
   }
-
+  @Get('/diet/:id')
+  async findAllBasedonDietIdAndIndex(
+    @Param('id') id: string,
+    @Query('index') index: number,
+  ) {
+    try {
+      const day = await this.dayService.findAllBasedonDietIdAndIndex(id, index);
+      if (day) {
+        return apiSuccess(200, day, 'Day found successfully');
+      } else {
+        return apiFailed(400, {}, 'Failed to find Day');
+      }
+    } catch (err) {
+      console.log(err);
+      return apiFailed(400, {}, 'Failed to find Day');
+    }
+  }
   @Get(':id')
   async findOne(@Param('id') id: string) {
     try {
