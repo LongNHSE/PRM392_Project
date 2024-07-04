@@ -10,7 +10,10 @@ import { Diet } from '../diet/schema/diet.schema';
 @Injectable()
 export class DayService {
   findAllBasedonDietIdAndIndex(id: string, index: number) {
-    return this.dayModel.find({ dietId: id, index: index });
+    return this.dayModel.findOne({
+      dietId: new mongoose.Types.ObjectId(id),
+      index: index,
+    });
   }
 
   async findSizeBasedonDietId(id: string) {

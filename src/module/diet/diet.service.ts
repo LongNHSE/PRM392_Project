@@ -8,11 +8,76 @@ import { DayService } from '../day/day.service';
 import { MealService } from '../meal/meal.service';
 import { MealStructureService } from '../meal_structure/meal_structure.service';
 import { FoodDetailService } from '../food_detail/food_detail.service';
-import { FoodService } from '../food/food.service';
 import { Food } from '../food/schema/food.schema';
 
 @Injectable()
 export class DietService {
+  async getAllDietByWeek(userId: any, week: number, dietId: string) {
+    const startIndex = (week - 1) * 7 + 1;
+    const endIndex = startIndex + 6;
+    const day: any[] = [];
+    let meal = [];
+    let food = [];
+
+    for (let i = startIndex; i <= endIndex; i++) {
+      const result = await this.dayService.findAllBasedonDietIdAndIndex(
+        dietId,
+        i,
+      );
+      if (result) {
+        day.push(result);
+      }
+    }
+    for (let i = 0; i < day.length; i++) {
+      const mealResult = await this.mealService.findBasedOnDayId(day[i]._id);
+      meal = [...mealResult, ...meal];
+    }
+    for (let i = 0; i < meal.length; i++) {
+      const foodResult =
+        await this.foodDetailService.findAllFoodDetailsBasedOnMealId(
+          meal[i]._id,
+        );
+      food = [...foodResult, ...food];
+    }
+
+    const groupedFoodDetails = food.reduce((acc, item) => {
+      const existingItemIndex = acc.findIndex(
+        (accItem) => accItem.foodId === item.foodId,
+      );
+      if (existingItemIndex !== -1) {
+        acc[existingItemIndex] = {
+          name: acc[existingItemIndex].food.foodName,
+          icon: acc[existingItemIndex].icon,
+          foodType: acc[existingItemIndex].foodType,
+          amount: acc[existingItemIndex].amount + item.amount,
+        };
+      } else {
+        acc.push({
+          name: item.food.foodName,
+          icon: item?.icon,
+          foodType: item?.foodType,
+          amount: item?.amount,
+        });
+      }
+      return acc;
+    }, []);
+
+    return groupedFoodDetails;
+  }
+  findDuplicates = (array) => {
+    const seen = new Set();
+    const duplicates = new Set();
+
+    array.forEach((item) => {
+      if (seen.has(item)) {
+        duplicates.add(item);
+      } else {
+        seen.add(item);
+      }
+    });
+
+    return Array.from(duplicates);
+  };
   constructor(
     @InjectModel(Diet.name) private dietModel: Model<Diet>,
     @InjectModel(Food.name) private foodModel: Model<Food>,

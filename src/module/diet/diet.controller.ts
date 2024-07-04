@@ -6,6 +6,7 @@ import {
   Param,
   Patch,
   Post,
+  Query,
   UseGuards,
   UsePipes,
   ValidationPipe,
@@ -55,6 +56,30 @@ export class DietController {
       const diet = await this.dietService.findAll();
       if (diet) {
         return apiSuccess(200, diet, 'Diet found successfully');
+      } else {
+        return { message: 'Failed to find diet' };
+      }
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  @Get('/:id/week')
+  @UseGuards(AuthGuard('jwt'))
+  async getAllDietByWeek(
+    @GetUser() user: any,
+    @Param('id') id: string,
+    @Query('index') week: number,
+  ) {
+    try {
+      const foodDetail = await this.dietService.getAllDietByWeek(
+        user.userId,
+        week,
+        id,
+      );
+
+      if (foodDetail) {
+        return apiSuccess(200, foodDetail, 'Food Detail found successfully');
       } else {
         return { message: 'Failed to find diet' };
       }
