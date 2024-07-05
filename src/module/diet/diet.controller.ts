@@ -103,6 +103,21 @@ export class DietController {
     }
   }
 
+  @Get('/my/latest')
+  @UseGuards(AuthGuard('jwt'))
+  async findMyLatestDiet(@GetUser() user: any) {
+    try {
+      const diet = await this.dietService.findMyLatestDiet(user.userId);
+      if (diet) {
+        return apiSuccess(200, diet[0], 'Diet found successfully');
+      } else {
+        return { message: 'Failed to find diet' };
+      }
+    } catch (err) {
+      throw err;
+    }
+  }
+
   @Get(':id')
   async findOne(@GetUser() user: any, @Param('id') id: string) {
     try {

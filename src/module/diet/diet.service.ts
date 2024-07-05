@@ -12,6 +12,63 @@ import { Food } from '../food/schema/food.schema';
 
 @Injectable()
 export class DietService {
+  findMyLatestDiet(userId: any) {
+    return this.dietModel.aggregate([
+      {
+        $match: { userId: new mongoose.Types.ObjectId(userId) },
+      },
+      {
+        $lookup: {
+          from: 'activitylevels',
+          localField: 'activityLevelId',
+          foreignField: '_id',
+          as: 'activity_levels',
+        },
+      },
+      {
+        $lookup: {
+          from: 'goals',
+          localField: 'goalId',
+          foreignField: '_id',
+          as: 'goals',
+        },
+      },
+      {
+        $lookup: {
+          from: 'preferences',
+          localField: 'preferenceId',
+          foreignField: '_id',
+          as: 'preferences',
+        },
+      },
+      {
+        $lookup: {
+          from: 'users',
+          localField: 'userId',
+          foreignField: '_id',
+          as: 'users',
+        },
+      },
+      {
+        $unwind: '$users',
+      },
+      {
+        $unwind: '$preferences',
+      },
+      {
+        $unwind: '$goals',
+      },
+      {
+        $unwind: '$activity_levels',
+      },
+      {
+        $sort: { createdAt: -1 }, // Assuming 'createdAt' is the timestamp field
+      },
+      {
+        $limit: 1, // Limit to the latest document
+      },
+    ]);
+  }
   async getAllDietByWeek(userId: any, week: number, dietId: string) {
     const startIndex = (week - 1) * 7 + 1;
     const endIndex = startIndex + 6;

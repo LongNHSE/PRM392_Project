@@ -7,9 +7,19 @@ import { Meal } from './schema/meal.schema';
 import { Day } from '../day/schema/day.schema';
 import { MealFrameService } from '../meal_frame/meal_frame.service';
 import { FoodDetailService } from '../food_detail/food_detail.service';
+import { DayService } from '../day/day.service';
 
 @Injectable()
 export class MealService {
+  async findBasedOnDietIdAndDayIndex(dietId: string, dayIndex: string) {
+    const dayId = await this.dayService.findAllBasedonDietIdAndIndex(
+      dietId,
+      dayIndex as any,
+    );
+    console.log(dayId._id);
+
+    return this.findBasedOnDayId(dayId._id);
+  }
   findBasedOnDayId(dayId: string) {
     return this.mealModel.aggregate([
       { $match: { dayId: new mongoose.Types.ObjectId(dayId) } },
@@ -53,6 +63,7 @@ export class MealService {
   }
   constructor(
     @InjectModel(Meal.name) private mealModel: Model<Meal>,
+    private dayService: DayService,
     private foodDetailService: FoodDetailService,
     private mealFrameService: MealFrameService,
   ) {}

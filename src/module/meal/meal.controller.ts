@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { MealService } from './meal.service';
 import { CreateMealDto } from './dto/create-meal.dto';
@@ -31,6 +32,24 @@ export class MealController {
   async findAll() {
     try {
       const result = await this.mealService.findAll();
+      if (result) return apiSuccess(200, result, 'Meal found successfully');
+      else return apiFailed(400, {}, 'Failed to find Meal');
+    } catch (e) {
+      return apiFailed(400, {}, 'Failed to find Meal');
+    }
+  }
+
+  @Get('diet/:dietId')
+  async findBasedOnDietIdAndDayIndex(
+    @Param('dietId') dietId: string,
+    @Query('dayIndex') dayIndex: string,
+  ) {
+    console.log(dietId, dayIndex);
+    try {
+      const result = await this.mealService.findBasedOnDietIdAndDayIndex(
+        dietId,
+        dayIndex,
+      );
       if (result) return apiSuccess(200, result, 'Meal found successfully');
       else return apiFailed(400, {}, 'Failed to find Meal');
     } catch (e) {

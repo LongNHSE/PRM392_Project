@@ -6,11 +6,13 @@ import { Meal, MealSchema } from './schema/meal.schema';
 import { IsMealExistedConstraint } from './validator/is-meal-existed.';
 import { MealFrameModule } from '../meal_frame/meal_frame.module';
 import { FoodDetailModule } from '../food_detail/food_detail.module';
+import { DayModule } from '../day/day.module';
 
 @Module({
   controllers: [MealController],
   imports: [
     FoodDetailModule,
+    DayModule,
     MealFrameModule,
     MongooseModule.forFeature([
       {

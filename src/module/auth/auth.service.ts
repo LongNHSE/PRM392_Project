@@ -107,7 +107,7 @@ export class AuthService {
 
   async signToken(userId: string): Promise<string> {
     const secret = this.config.get('JWT_SECRET');
-    return this.jwt.signAsync({ userId }, { expiresIn: '15m', secret: secret });
+    return this.jwt.signAsync({ userId }, { expiresIn: '7d', secret: secret });
   }
 
   async updateRefreshToken(userId: string): Promise<string> {
