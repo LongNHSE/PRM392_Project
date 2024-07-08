@@ -49,9 +49,11 @@ export class AuthService {
     return {
       statusCode: 200,
       message: 'Login successfully',
-      token: token,
-      refreshToken: refreshToken,
-      user: user,
+      data: {
+        token: token,
+        refreshToken: refreshToken,
+        user: user,
+      },
     };
   }
 
