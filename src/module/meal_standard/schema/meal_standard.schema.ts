@@ -13,6 +13,9 @@ export class MealStandard {
   @Prop({ required: false, default: true })
   isActive: boolean;
 
+  @Prop({ required: false })
+  image: string;
+
   _id: string;
 }
 

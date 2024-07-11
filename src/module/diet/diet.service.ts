@@ -9,7 +9,14 @@ import { MealService } from '../meal/meal.service';
 import { MealStructureService } from '../meal_structure/meal_structure.service';
 import { FoodDetailService } from '../food_detail/food_detail.service';
 import { Food } from '../food/schema/food.schema';
+import { FoodTypeService } from '../food_type/food_type.service';
 
+type FoodTypeArray = [
+  {
+    foodTypeName: string;
+    foods: any[];
+  },
+];
 @Injectable()
 export class DietService {
   findMyLatestDiet(userId: any) {
@@ -98,28 +105,45 @@ export class DietService {
     }
 
     const groupedFoodDetails = food.reduce((acc, item) => {
-      const existingItemIndex = acc.findIndex(
-        (accItem) => accItem.foodId === item.foodId,
-      );
+      // console.log('item', item._id);
+      const existingItemIndex = acc.findIndex((accItem) => {
+        return accItem.name === item.food.foodName;
+      });
       if (existingItemIndex !== -1) {
+        console.log('existingItemIndex', existingItemIndex);
         acc[existingItemIndex] = {
-          name: acc[existingItemIndex].food.foodName,
+          name: acc[existingItemIndex].name,
           icon: acc[existingItemIndex].icon,
           foodType: acc[existingItemIndex].foodType,
           amount: acc[existingItemIndex].amount + item.amount,
         };
       } else {
         acc.push({
+          _id: item._id,
           name: item.food.foodName,
           icon: item?.icon,
           foodType: item?.foodType,
           amount: item?.amount,
         });
       }
+
       return acc;
     }, []);
 
-    return groupedFoodDetails;
+    const foodType = await this.foodTypeService.findAll();
+    const foodArray: FoodTypeArray = [{ foodTypeName: '', foods: [] }];
+    foodType.forEach((foodTypeItem) => {
+      const food = groupedFoodDetails.filter(
+        (foodItem) =>
+          foodItem.foodType._id.toString() === foodTypeItem._id.toString(),
+      );
+      foodArray.push({
+        foodTypeName: foodTypeItem.name,
+        foods: food,
+      });
+    });
+    foodArray.shift();
+    return foodArray;
   }
   findDuplicates = (array) => {
     const seen = new Set();
@@ -143,6 +167,7 @@ export class DietService {
     private readonly mealService: MealService,
     private readonly mealStuctureService: MealStructureService,
     private readonly foodDetailService: FoodDetailService,
+    private readonly foodTypeService: FoodTypeService,
   ) {}
   findAll() {
     return this.dietModel.aggregate([
