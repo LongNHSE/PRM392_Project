@@ -63,6 +63,22 @@ export class FoodDetailController {
     }
   }
 
+  // @Get('meal/')
+  // async findAllFoodDetailBasedOnMealId(@Param('id') mealId: string) {
+  //   try {
+  //     const foodDetail =
+  //       await this.foodDetailService.findAllFoodDetailsBasedOnMealId(mealId);
+  //     if (foodDetail) {
+  //       return apiSuccess(200, foodDetail, 'Food Detail found successfully');
+  //     } else {
+  //       return apiFailed(400, {}, 'Failed to find Food Detail');
+  //     }
+  //   } catch (err) {
+  //     console.log(err);
+  //     return apiFailed(400, {}, 'Failed to find Food Detail');
+  //   }
+  // }
+
   @Get(':id')
   async findOne(@Param('id') id: string) {
     try {
@@ -102,5 +118,23 @@ export class FoodDetailController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.foodDetailService.remove(id);
+  }
+
+  @Get(':id/substitute')
+  async findSubstituteFood(@Param('id') id: string) {
+    try {
+      const foodDetail = await this.foodDetailService.findSubstitudeFood(id);
+      if (foodDetail) {
+        return apiSuccess(
+          200,
+          foodDetail,
+          'Substitute Food found successfully',
+        );
+      } else {
+        return apiFailed(400, {}, 'Failed to find Substitute Food');
+      }
+    } catch (err) {
+      return apiFailed(400, {}, 'Failed to find Substitute Food');
+    }
   }
 }

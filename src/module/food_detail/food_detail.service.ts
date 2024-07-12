@@ -17,6 +17,21 @@ import { transpose } from 'src/util/util';
 
 @Injectable()
 export class FoodDetailService {
+  async findSubstitudeFood(id: string) {
+    const foodDetail = await this.findOne(id);
+    const food = await this.foodService.findOne(foodDetail[0].foodId);
+    console.log(food[0]._id);
+    if (food) {
+      let result = await this.foodService.findSubstitudeFood(
+        food[0].foodType.macroGroupId.toString(),
+      );
+      result = result.filter((el) => {
+        return el._id.toString() !== food[0]._id.toString();
+      });
+      return result;
+    }
+    return null;
+  }
   findAllFoodDetailsBasedOnMealId(mealId: string) {
     return this.foodDetailModel.aggregate([
       { $match: { mealId: new mongoose.Types.ObjectId(mealId) } },
@@ -194,14 +209,14 @@ export class FoodDetailService {
   //   return details;
   // }
 
-  private listFoodByCategory(
-    allApplicableFood: Food[],
-    category: string,
-  ): Food[] {
-    // Implementation of listFoodByCategory
-    // This is a placeholder. You need to implement this method based on your application's logic.
-    return [];
-  }
+  // private listFoodByCategory(
+  //   allApplicableFood: Food[],
+  //   category: string,
+  // ): Food[] {
+  //   // Implementation of listFoodByCategory
+  //   // This is a placeholder. You need to implement this method based on your application's logic.
+  //   return [];
+  // }
 
   async generateFoodDetail(
     meal: Meal,
@@ -285,6 +300,97 @@ export class FoodDetailService {
     console.log(parseFloat((0).toFixed(2)));
     return foodDetail;
   }
+
+  async generateFoodDetailSubstituteByMacroFood(
+    meal: Meal,
+    mealItem: MealItem,
+  ): Promise<any[]> {
+    const foodDetail = new FoodDetail();
+    const foodDataset = await this.foodService.findAll();
+    const foodResult = [];
+    const foodOfCategory = await this.foodService.findFoodByCaterory(
+      foodDataset,
+      mealItem,
+    );
+
+    // Implementation of generateFoodDetail
+
+    for (let idx = 0; idx < foodOfCategory.length; idx++) {
+      const food = foodOfCategory[idx];
+      const macroGroup = await this.macroGroupModel.findById(
+        mealItem.macroGroupId,
+      );
+      const macroNutrient = await this.macroNutrientModel.findById(
+        macroGroup.macronutrientId,
+      );
+      let nutrient = 0;
+
+      let baseNutrient = 1;
+      switch (macroNutrient.name.toLowerCase()) {
+        case 'carbohydrate':
+          nutrient = meal.carbohydratedstd;
+          baseNutrient = food.carbohydrate;
+          break;
+
+        case 'fiber':
+          nutrient = meal.fiberstd;
+          baseNutrient = food.fiber;
+          break;
+
+        case 'protein':
+          nutrient = meal.proteinstd;
+          baseNutrient = food.protein;
+          break;
+
+        case 'fat':
+          nutrient = meal.fatstd;
+          baseNutrient = food.fat;
+          break;
+
+        case 'water':
+          nutrient = meal.waterstd;
+          baseNutrient = food.water;
+          break;
+
+        default:
+          break;
+      }
+      const calories = parseFloat(
+        (nutrient * macroGroup.ratio * macroGroup.relativeEst).toFixed(3),
+      );
+      let caloricValue = macroNutrient.caloricValue;
+      if (caloricValue === 0) {
+        caloricValue = 1;
+      }
+      console.log('calories', caloricValue);
+      let ratio = parseFloat(
+        (calories / (baseNutrient * caloricValue)).toFixed(3),
+      );
+      if (isNaN(ratio)) {
+        ratio = 1;
+        console.log('ratio is NaN', ratio);
+      }
+
+      foodDetail.foodId = food._id;
+      foodDetail.amount = parseFloat((ratio * food.size).toFixed(2));
+      foodDetail.totalCal = parseFloat((ratio * food.caloricintake).toFixed(2));
+      foodDetail.carborhydrated = parseFloat(
+        (ratio * food.carbohydrate).toFixed(2),
+      );
+      foodDetail.fiber = parseFloat((ratio * food.fiber).toFixed(2));
+      foodDetail.protein = parseFloat((ratio * food.protein).toFixed(2));
+      foodDetail.fat = parseFloat((ratio * food.fat).toFixed(2));
+      foodDetail.water = parseFloat((ratio * food.water).toFixed(2));
+      foodDetail.icon = food.icon;
+      foodDetail.description = food.description;
+      foodDetail.mealId = meal._id;
+      console.log(parseFloat((0).toFixed(2)));
+      foodResult.push(foodDetail);
+    }
+    foodResult.shift();
+    return foodResult;
+  }
+
   async generateLoadsOfFoodDetail(
     allApplicableFood: Food[],
     meal: Meal,

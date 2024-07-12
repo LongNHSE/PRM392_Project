@@ -9,6 +9,13 @@ import { FoodTypeService } from '../food_type/food_type.service';
 
 @Injectable()
 export class FoodService {
+  async findSubstitudeFood(macroId: string) {
+    const allFood = await this.findAll();
+    const result = allFood.filter(
+      (food) => food.foodType.macroGroupId.toString() === macroId,
+    );
+    return result;
+  }
   async updateImage(_id: string, resultUrl: unknown) {
     return await this.foodModel.findByIdAndUpdate(_id, { icon: resultUrl });
   }
@@ -35,6 +42,9 @@ export class FoodService {
           as: 'foodType',
         },
       },
+      {
+        $unwind: '$foodType',
+      },
     ]);
   }
 
@@ -53,6 +63,7 @@ export class FoodService {
           as: 'foodType',
         },
       },
+      { $unwind: '$foodType' },
     ]);
   }
 
