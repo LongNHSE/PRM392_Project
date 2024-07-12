@@ -137,4 +137,22 @@ export class FoodDetailController {
       return apiFailed(400, {}, 'Failed to find Substitute Food');
     }
   }
+
+  @Patch(':id/substitute')
+  async updateSubstituteFood(@Param('id') id: string) {
+    try {
+      const foodDetail = await this.foodDetailService.findSubstitudeFood(id);
+      if (foodDetail) {
+        return apiSuccess(
+          200,
+          foodDetail,
+          'Substitute Food found successfully',
+        );
+      } else {
+        return apiFailed(400, {}, 'Failed to find Substitute Food');
+      }
+    } catch (err) {
+      return apiFailed(400, {}, 'Failed to find Substitute Food');
+    }
+  }
 }
