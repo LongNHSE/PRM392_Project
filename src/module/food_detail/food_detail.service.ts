@@ -97,7 +97,59 @@ export class FoodDetailService {
   }
 
   findOne(id: string) {
-    return this.foodDetailModel.findById(id);
+    return this.foodDetailModel.aggregate([
+      { $match: { _id: new mongoose.Types.ObjectId(id) } },
+      {
+        $lookup: {
+          from: 'foods',
+          localField: 'foodId',
+          foreignField: '_id',
+          as: 'food',
+        },
+      },
+      {
+        $unwind: '$food',
+      },
+      {
+        $lookup: {
+          from: 'foodtypes',
+          localField: 'food.typeId',
+          foreignField: '_id',
+          as: 'foodType',
+        },
+      },
+      {
+        $unwind: '$foodType',
+      },
+      {
+        $lookup: {
+          from: 'macrogroups',
+          localField: 'foodType.macroGroupId',
+          foreignField: '_id',
+          as: 'macroGroup',
+        },
+      },
+      {
+        $unwind: {
+          path: '$macroGroup',
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+      {
+        $lookup: {
+          from: 'macronutrients',
+          localField: 'macroGroup.macronutrientId',
+          foreignField: '_id',
+          as: 'macroNutrient',
+        },
+      },
+      {
+        $unwind: {
+          path: '$macroNutrient',
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+    ]);
   }
 
   update(id: string, updateFoodDetailDto: UpdateFoodDetailDto) {
