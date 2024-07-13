@@ -107,6 +107,7 @@ export class DietController {
   @UseGuards(AuthGuard('jwt'))
   async findMyLatestDiet(@GetUser() user: any) {
     try {
+      console.log('user', user.userId);
       const diet = await this.dietService.findMyLatestDiet(user.userId);
       if (diet) {
         return apiSuccess(200, diet[0], 'Diet found successfully');

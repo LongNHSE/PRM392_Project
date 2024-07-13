@@ -3,10 +3,52 @@ import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Product } from './schema/product.schema';
-import { Model } from 'mongoose';
+import mongoose, { Model } from 'mongoose';
+import { ProductType } from '../product_type/schema/product_type.schema';
 
 @Injectable()
 export class ProductService {
+  findByCategory(categoryId: string) {
+    const pipeline = [];
+    if (categoryId) {
+      pipeline.push({
+        $match: { productTypeId: new mongoose.Types.ObjectId(categoryId) },
+      });
+      pipeline.push(
+        {
+          $lookup: {
+            from: 'producttypes',
+            foreignField: '_id',
+            localField: 'productTypeId',
+            as: 'productTypeDetails',
+          },
+        },
+        {
+          $unwind: {
+            path: '$productTypeDetails',
+            preserveNullAndEmptyArrays: true,
+          },
+        },
+      );
+      return this.productModel.aggregate(pipeline);
+    }
+    return this.productModel.aggregate([
+      {
+        $lookup: {
+          from: 'producttypes',
+          foreignField: '_id',
+          localField: 'productTypeId',
+          as: 'productTypeDetails',
+        },
+      },
+      {
+        $unwind: {
+          path: '$productTypeDetails',
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+    ]);
+  }
   updateImage(productId: any, urlResult: string) {
     return this.productModel.findByIdAndUpdate(productId, {
       $push: { image: urlResult },

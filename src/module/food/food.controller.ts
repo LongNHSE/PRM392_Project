@@ -8,6 +8,7 @@ import {
   Delete,
   UsePipes,
   ValidationPipe,
+  Query,
 } from '@nestjs/common';
 import { FoodService } from './food.service';
 import { CreateFoodDto } from './dto/create-food.dto';
@@ -47,6 +48,20 @@ export class FoodController {
       return apiSuccess(200, result, 'Get all foods successfully');
     } catch (error) {
       return apiFailed(400, {}, 'Get all foods failed');
+    }
+  }
+  @Get('/substitute')
+  async findSubstituteFood(@Query('macroId') macroId: string) {
+    console.log(macroId);
+    try {
+      const result = await this.foodService.findSubstitudeFood(macroId);
+      if (result) {
+        return apiSuccess(200, result, 'Get Substitute Foods successfully');
+      } else {
+        return apiSuccess(200, null, 'No Substitute Foods exist');
+      }
+    } catch (e) {
+      return apiFailed(400, e, 'Get Substitute Foods failed');
     }
   }
 

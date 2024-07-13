@@ -11,6 +11,7 @@ import {
   UseGuards,
   UseInterceptors,
   UploadedFile,
+  Query,
 } from '@nestjs/common';
 import { ProductService } from './product.service';
 import { CreateProductDto } from './dto/create-product.dto';
@@ -50,10 +51,21 @@ export class ProductController {
     }
   }
 
+  // @Get()
+  // async findAll() {
+  //   try {
+  //     const result = await this.productService.findAll();
+  //     return apiSuccess(200, result, 'Get all products successfully');
+  //   } catch (error) {
+  //     return apiFailed(400, {}, 'Get all products failed');
+  //   }
+  // }
+
   @Get()
-  async findAll() {
+  async findByCategory(@Query('categoryId') caterogyId: string) {
+    console.log('caterogyId', caterogyId);
     try {
-      const result = await this.productService.findAll();
+      const result = await this.productService.findByCategory(caterogyId);
       return apiSuccess(200, result, 'Get all products successfully');
     } catch (error) {
       return apiFailed(400, {}, 'Get all products failed');

@@ -11,6 +11,7 @@ import { MealStructureModule } from '../meal_structure/meal_structure.module';
 import { FoodDetailModule } from '../food_detail/food_detail.module';
 import { FoodModule } from '../food/food.module';
 import { Food, FoodSchema } from '../food/schema/food.schema';
+import { FoodTypeModule } from '../food_type/food_type.module';
 
 @Module({
   controllers: [DietController],
@@ -20,6 +21,7 @@ import { Food, FoodSchema } from '../food/schema/food.schema';
     BmiModule,
     MealModule,
     FoodDetailModule,
+    FoodTypeModule,
     MongooseModule.forFeature([{ name: Diet.name, schema: DietSchema }]),
     MongooseModule.forFeature([{ name: Food.name, schema: FoodSchema }]),
   ],
