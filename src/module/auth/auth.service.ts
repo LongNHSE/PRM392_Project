@@ -71,9 +71,11 @@ export class AuthService {
       return {
         statusCode: 201,
         message: 'Created successfully',
-        token: token,
-        refreshToken: refreshToken,
-        user: newUser,
+        data: {
+          token: token,
+          refreshToken: refreshToken,
+          user: newUser,
+        },
       };
     } catch (e) {
       if (e instanceof MongoServerError) {
