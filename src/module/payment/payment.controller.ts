@@ -8,11 +8,14 @@ import {
   Delete,
   UsePipes,
   ValidationPipe,
+  UseGuards,
 } from '@nestjs/common';
 import { PaymentService } from './payment.service';
 import { CreatePaymentDto } from './dto/create-payment.dto';
 import { UpdatePaymentDto } from './dto/update-payment.dto';
 import { apiFailed, apiSuccess } from 'src/common/api-response';
+import { AuthGuard } from '@nestjs/passport';
+import { GetUser } from '../auth/decorator';
 
 @Controller('payment')
 export class PaymentController {
@@ -47,6 +50,15 @@ export class PaymentController {
       return apiSuccess(200, result, 'Get all payments successfully');
     } catch (error) {
       return apiFailed(400, {}, 'Get all payments failed');
+    }
+  }
+  @Post('/payment-link')
+  @UseGuards(AuthGuard('jwt'))
+  async createPaymentLink(@GetUser() user: any) {
+    try {
+      return await this.paymentService.createPaymentLink(user.userId);
+    } catch (error) {
+      throw apiFailed(error.statusCode, null, error.message);
     }
   }
 
