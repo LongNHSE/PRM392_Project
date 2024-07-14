@@ -7,21 +7,9 @@ export class UpdateProductDetailDto extends PartialType(
 ) {
   @IsOptional()
   @IsString()
-  billId: string;
-
-  @IsOptional()
-  @IsString()
   productId: string;
 
   @IsOptional()
   @IsNumber()
   quantity: number;
-
-  @IsOptional()
-  @IsNumber()
-  unitPrice: number;
-
-  @IsOptional()
-  @IsNumber()
-  total: number;
 }

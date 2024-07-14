@@ -8,6 +8,56 @@ import { ProductService } from '../product/product.service';
 
 @Injectable()
 export class ProductDetailService {
+  async updateCart(
+    userId: any,
+    createProductDetailDto: UpdateProductDetailDto,
+  ) {
+    try {
+      const product = await this.productSevice.findOne(
+        createProductDetailDto.productId,
+      );
+      const price = product.price * createProductDetailDto.quantity;
+
+      // Step 1: Find the existing document
+      const existingProductDetail = await this.productDetailModel.findOne({
+        productId: new mongoose.Types.ObjectId(
+          createProductDetailDto.productId,
+        ),
+        userId: new mongoose.Types.ObjectId(userId),
+        billId: null,
+      });
+
+      // // Step 2: Calculate the new total price
+      let newTotalPrice = price;
+      // if (existingProductDetail) {
+      //   newTotalPrice += existingProductDetail.total;
+      // }
+
+      // Step 3: Update the document with the new total price
+      const result = await this.productDetailModel.findOneAndUpdate(
+        {
+          productId: new mongoose.Types.ObjectId(
+            createProductDetailDto.productId,
+          ),
+          userId: new mongoose.Types.ObjectId(userId),
+          billId: null,
+        },
+        {
+          $set: {
+            unitPrice: product.price,
+          },
+          $inc: {
+            total: newTotalPrice,
+            quantity: createProductDetailDto.quantity,
+          }, // Increment the total by newTotalPrice
+        },
+        { upsert: true, new: true },
+      );
+      return result;
+    } catch (error) {
+      throw error;
+    }
+  }
   findMyProductDetail(userId: any) {
     return this.productDetailModel.aggregate([
       {

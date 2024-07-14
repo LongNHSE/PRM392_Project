@@ -33,7 +33,6 @@ export class ProductDetailController {
         createProductDetailDto,
         user.userId,
       );
-      console.log(result);
       if (result) {
         return apiSuccess(201, result, 'Created product detail succesfully');
       } else {
@@ -57,6 +56,27 @@ export class ProductDetailController {
       return apiSuccess(200, result, 'Get all product detail successfully');
     } catch (error) {
       return apiFailed(400, {}, 'Get all product detail failed');
+    }
+  }
+
+  @Patch('')
+  @UseGuards(AuthGuard('jwt'))
+  async updateImage(
+    @Body() updateProductDetailDto: UpdateProductDetailDto,
+    @GetUser() user: any,
+  ) {
+    try {
+      const result = await this.productDetailService.updateCart(
+        user.userId,
+        updateProductDetailDto,
+      );
+      return apiSuccess(
+        200,
+        result,
+        'Updated image product detail successfully',
+      );
+    } catch (error) {
+      return apiFailed(400, {}, 'Updated image product detail failed');
     }
   }
   @Get('/my')
