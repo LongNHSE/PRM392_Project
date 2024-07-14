@@ -40,6 +40,7 @@ import { ProductType } from './module/product_type/schema/product_type.schema';
 import { FoodFactor } from './module/food_fact/schema/food_fact.schema';
 import { ProductTypeModule } from './module/product_type/product_type.module';
 import { FoodFactorModule } from './module/food_fact/food_fact.module';
+import { CartModule } from './module/cart/cart.module';
 
 @Module({
   imports: [
@@ -89,6 +90,7 @@ import { FoodFactorModule } from './module/food_fact/food_fact.module';
     MealStandardModule,
     MealStructureModule,
     PreferenceModule,
+    CartModule,
   ],
   controllers: [AppController],
   providers: [AppService],

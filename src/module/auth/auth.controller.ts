@@ -38,6 +38,7 @@ export class AuthController {
     @Body() body: LoginDTO,
     @Res({ passthrough: true }) response: Response,
   ) {
+    console.log(body);
     return this.authService.login(body, response);
   }
   @UsePipes(new ValidationPipe())

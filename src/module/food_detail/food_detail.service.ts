@@ -177,47 +177,6 @@ export class FoodDetailService {
     return `This action removes a #${id} foodDetail`;
   }
 
-  // public generateLoadsOfFoodDetail(
-  //   allApplicableFood: Food[],
-  //   meal: Meal,
-  //   numDay: number,
-  // ): FoodDetail[][] {
-  //   const listOfFoodDetail: string[] = Constants.FOOD_DETAIL_BY_MEAL.get(
-  //     meal.getMealIndex(),
-  //   );
-  //   const details: FoodDetail[][] = []; // MEALS-DAYS-DETAILS
-
-  //   let foodOfCategory: Food[];
-  //   let foodDetailByDay: FoodDetail[] = [];
-  //   for (let j = 0; j < numDay; j++) {
-  //     // DAYS
-  //     for (let i = 0; i < listOfFoodDetail.length; i++) {
-  //       // DETAILS
-  //       foodOfCategory = this.listFoodByCategory(
-  //         allApplicableFood,
-  //         listOfFoodDetail[i],
-  //       );
-  //       foodDetailByDay.push(
-  //         this.generateFoodDetail(meal, foodOfCategory, listOfFoodDetail[i]),
-  //       );
-  //     }
-  //     details.push(foodDetailByDay);
-
-  //     // RESET foodDetailByDay
-  //     foodDetailByDay = [];
-  //   }
-  //   return details;
-  // }
-
-  // private listFoodByCategory(
-  //   allApplicableFood: Food[],
-  //   category: string,
-  // ): Food[] {
-  //   // Implementation of listFoodByCategory
-  //   // This is a placeholder. You need to implement this method based on your application's logic.
-  //   return [];
-  // }
-
   async generateFoodDetail(
     meal: Meal,
     foodDataset: Food[],

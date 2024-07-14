@@ -6,14 +6,14 @@ import {
   ProductDetail,
   ProductDetailSchema,
 } from './schema/productDetail.schema';
-import { Product } from '../product/schema/product.schema';
 import { Bill } from '../bill/schema/bill.schema';
+import { ProductModule } from '../product/product.module';
 
 @Module({
   controllers: [ProductDetailController],
   imports: [
-    Product,
-    Bill,
+    ProductModule,
+
     MongooseModule.forFeature([
       { name: ProductDetail.name, schema: ProductDetailSchema },
     ]),

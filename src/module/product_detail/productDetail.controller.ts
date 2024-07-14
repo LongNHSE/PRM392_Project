@@ -8,22 +8,30 @@ import {
   Delete,
   UsePipes,
   ValidationPipe,
+  UseGuards,
 } from '@nestjs/common';
 import { ProductDetailService } from './productDetail.service';
 import { CreateProductDetailDto } from './dto/create-productDetail.dto';
 import { UpdateProductDetailDto } from './dto/update-productDetail.dto';
 import { apiFailed, apiSuccess } from 'src/common/api-response';
+import { AuthGuard } from '@nestjs/passport';
+import { GetUser } from '../auth/decorator';
 
 @Controller('productDetail')
 export class ProductDetailController {
   constructor(private readonly productDetailService: ProductDetailService) {}
 
   @Post()
+  @UseGuards(AuthGuard('jwt'))
   @UsePipes(new ValidationPipe({ whitelist: true }))
-  async create(@Body() createProductDetailDto: CreateProductDetailDto) {
+  async create(
+    @Body() createProductDetailDto: CreateProductDetailDto,
+    @GetUser() user: any,
+  ) {
     try {
       const result = await this.productDetailService.create(
         createProductDetailDto,
+        user.userId,
       );
       console.log(result);
       if (result) {
@@ -46,6 +54,18 @@ export class ProductDetailController {
   async findAll() {
     try {
       const result = await this.productDetailService.findAll();
+      return apiSuccess(200, result, 'Get all product detail successfully');
+    } catch (error) {
+      return apiFailed(400, {}, 'Get all product detail failed');
+    }
+  }
+  @Get('/my')
+  @UseGuards(AuthGuard('jwt'))
+  async findMyProductDetail(@GetUser() user: any) {
+    try {
+      const result = await this.productDetailService.findMyProductDetail(
+        user.userId,
+      );
       return apiSuccess(200, result, 'Get all product detail successfully');
     } catch (error) {
       return apiFailed(400, {}, 'Get all product detail failed');
