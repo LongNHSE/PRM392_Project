@@ -84,7 +84,7 @@ export class FoodDetailController {
     try {
       const foodDetail = await this.foodDetailService.findOne(id);
       if (foodDetail) {
-        return apiSuccess(200, foodDetail, 'Food Detail found successfully');
+        return apiSuccess(200, foodDetail[0], 'Food Detail found successfully');
       } else {
         return apiFailed(400, {}, 'Failed to find Food Detail');
       }

@@ -242,17 +242,23 @@ export class FoodDetailService {
       ratio = 1;
       console.log('ratio is NaN', ratio);
     }
+    function ensureValidNumber(value, defaultValue = 0) {
+      const number = parseFloat(value);
+      return isNaN(number) ? defaultValue : number;
+    }
 
     foodDetail.foodId = food._id;
-    foodDetail.amount = parseFloat((ratio * food.size).toFixed(2));
-    foodDetail.totalCal = parseFloat((ratio * food.caloricintake).toFixed(2));
-    foodDetail.carborhydrated = parseFloat(
+    foodDetail.amount = ensureValidNumber((ratio * food.size).toFixed(2));
+    foodDetail.totalCal = ensureValidNumber(
+      (ratio * food.caloricintake).toFixed(2),
+    );
+    foodDetail.carborhydrated = ensureValidNumber(
       (ratio * food.carbohydrate).toFixed(2),
     );
-    foodDetail.fiber = parseFloat((ratio * food.fiber).toFixed(2));
-    foodDetail.protein = parseFloat((ratio * food.protein).toFixed(2));
-    foodDetail.fat = parseFloat((ratio * food.fat).toFixed(2));
-    foodDetail.water = parseFloat((ratio * food.water).toFixed(2));
+    foodDetail.fiber = ensureValidNumber((ratio * food.fiber).toFixed(2));
+    foodDetail.protein = ensureValidNumber((ratio * food.protein).toFixed(2));
+    foodDetail.fat = ensureValidNumber((ratio * food.fat).toFixed(2));
+    foodDetail.water = ensureValidNumber((ratio * food.water).toFixed(2));
     foodDetail.icon = food.icon;
     foodDetail.description = food.description;
     foodDetail.mealId = meal._id;
@@ -329,17 +335,22 @@ export class FoodDetailService {
         ratio = 1;
         console.log('ratio is NaN', ratio);
       }
-
+      function ensureValidNumber(value, defaultValue = 1) {
+        const number = parseFloat(value);
+        return isNaN(number) ? defaultValue : number;
+      }
       foodDetail.foodId = food._id;
-      foodDetail.amount = parseFloat((ratio * food.size).toFixed(2));
-      foodDetail.totalCal = parseFloat((ratio * food.caloricintake).toFixed(2));
-      foodDetail.carborhydrated = parseFloat(
+      foodDetail.amount = ensureValidNumber((ratio * food.size).toFixed(2));
+      foodDetail.totalCal = ensureValidNumber(
+        (ratio * food.caloricintake).toFixed(2),
+      );
+      foodDetail.carborhydrated = ensureValidNumber(
         (ratio * food.carbohydrate).toFixed(2),
       );
-      foodDetail.fiber = parseFloat((ratio * food.fiber).toFixed(2));
-      foodDetail.protein = parseFloat((ratio * food.protein).toFixed(2));
-      foodDetail.fat = parseFloat((ratio * food.fat).toFixed(2));
-      foodDetail.water = parseFloat((ratio * food.water).toFixed(2));
+      foodDetail.fiber = ensureValidNumber((ratio * food.fiber).toFixed(2));
+      foodDetail.protein = ensureValidNumber((ratio * food.protein).toFixed(2));
+      foodDetail.fat = ensureValidNumber((ratio * food.fat).toFixed(2));
+      foodDetail.water = ensureValidNumber((ratio * food.water).toFixed(2));
       foodDetail.icon = food.icon;
       foodDetail.description = food.description;
       foodDetail.mealId = meal._id;
