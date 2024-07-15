@@ -100,10 +100,12 @@ export class FoodDetailController {
     @Body() updateFoodDetailDto: UpdateFoodDetailDto,
   ) {
     try {
+      console.log(updateFoodDetailDto);
       const foodDetail = await this.foodDetailService.update(
         id,
         updateFoodDetailDto,
       );
+      console.log(foodDetail);
       if (foodDetail) {
         return apiSuccess(200, foodDetail, 'Food Detail updated successfully');
       } else {

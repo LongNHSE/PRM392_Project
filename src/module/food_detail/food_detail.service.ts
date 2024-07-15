@@ -167,10 +167,22 @@ export class FoodDetailService {
     ]);
   }
 
-  update(id: string, updateFoodDetailDto: UpdateFoodDetailDto) {
-    return this.foodDetailModel.findByIdAndUpdate(id, updateFoodDetailDto, {
-      new: true,
-    });
+  async update(id: string, updateFoodDetailDto: UpdateFoodDetailDto) {
+    const food = await this.foodService.findOne(
+      updateFoodDetailDto.foodId as string,
+    );
+    const foodResult = food[0];
+    return this.foodDetailModel.findByIdAndUpdate(
+      id,
+      {
+        foodId: updateFoodDetailDto.foodId,
+        icon: foodResult.icon,
+        description: foodResult.description,
+      },
+      {
+        new: true,
+      },
+    );
   }
 
   remove(id: string) {
