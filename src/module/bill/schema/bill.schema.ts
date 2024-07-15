@@ -10,14 +10,14 @@ export class Bill {
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: User.name })
   userId: User;
 
-  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: Payment.name })
-  paymentId: Payment;
+  // @Prop({ type: mongoose.Schema.Types.ObjectId, ref: Payment.name })
+  // paymentId: Payment;
 
   @Prop({ required: true, default: () => Date.now() })
   date: Date;
 
-  @Prop({ required: false, default: true })
-  status: boolean;
+  @Prop({ required: false, enum: ['pending', 'paid'], default: 'pending' })
+  status: string;
 }
 
 export const BillSchema = SchemaFactory.createForClass(Bill);

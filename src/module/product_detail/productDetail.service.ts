@@ -129,7 +129,7 @@ export class ProductDetailService {
     return await this.productDetailModel.findById(id);
   }
 
-  async update(id: string, updateProductDetailDto: UpdateProductDetailDto) {
+  async update(id: string, updateProductDetailDto: any) {
     return await this.productDetailModel.findByIdAndUpdate(
       id,
       updateProductDetailDto,

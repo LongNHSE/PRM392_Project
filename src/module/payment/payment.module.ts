@@ -5,12 +5,14 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { Payment, PaymentSchema } from './schema/payment.schema';
 import { UserModule } from '../user/user.module';
 import { ProductDetailModule } from '../product_detail/productDetail.module';
+import { BillModule } from '../bill/bill.module';
 
 @Module({
   controllers: [PaymentController],
   imports: [
     UserModule,
     ProductDetailModule,
+    BillModule,
     MongooseModule.forFeature([{ name: Payment.name, schema: PaymentSchema }]),
   ],
   providers: [PaymentService],

@@ -7,5 +7,9 @@ export class CreateBillDto {
 
   @IsNotEmpty()
   @IsString()
-  paymentId: string;
+  date: string | Date;
+
+  @IsNotEmpty()
+  @IsString()
+  status: string;
 }

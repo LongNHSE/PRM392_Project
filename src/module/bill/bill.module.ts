@@ -10,7 +10,6 @@ import { UserModule } from '../user/user.module';
   controllers: [BillController],
   imports: [
     UserModule,
-    PaymentModule,
     MongooseModule.forFeature([{ name: Bill.name, schema: BillSchema }]),
   ],
   providers: [BillService],

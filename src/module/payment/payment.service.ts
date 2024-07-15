@@ -8,6 +8,7 @@ import * as dotenv from 'dotenv';
 import * as crypto from 'crypto';
 import { UserService } from '../user/user.service';
 import { ProductDetailService } from '../product_detail/productDetail.service';
+import { BillService } from '../bill/bill.service';
 
 dotenv.config();
 
@@ -67,21 +68,24 @@ export class PaymentService {
 
     // generate hmac
     const hmac = await this.generateHmac(payload);
-    return await fetch('https://api-merchant.payos.vn/v2/payment-requests', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-client-id': config.PAYOS_CLIENT_ID || '',
-        'x-api-key': config.PAYOS_API_KEY || '',
+    const result = await fetch(
+      'https://api-merchant.payos.vn/v2/payment-requests',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-client-id': config.PAYOS_CLIENT_ID || '',
+          'x-api-key': config.PAYOS_API_KEY || '',
+        },
+        body: JSON.stringify({
+          ...payload,
+          cancelUrl: this.cancelURL,
+          returnUrl: this.returnURL,
+          expiredAt: Math.floor(Date.now() / 1000) + 2 * 60, // 5 minutes
+          signature: hmac,
+        }),
       },
-      body: JSON.stringify({
-        ...payload,
-        cancelUrl: this.cancelURL,
-        returnUrl: this.returnURL,
-        expiredAt: Math.floor(Date.now() / 1000) + 2 * 60, // 5 minutes
-        signature: hmac,
-      }),
-    })
+    )
       .then((response) => response.json())
       .then((data) => {
         return data;
@@ -89,11 +93,29 @@ export class PaymentService {
       .catch((error) => {
         throw new HttpException(error, 400);
       });
+    if (result) {
+      const bill = await this.billService.create({
+        userId: userId,
+        status: 'paid',
+        date: new Date(),
+      });
+
+      if (bill) {
+        productDetail.forEach(async (item) => {
+          await this.productDetailService.update(item._id, {
+            status: 'paid',
+            billId: bill._id,
+          });
+        });
+      }
+    }
+    return result;
   }
 
   constructor(
     @InjectModel(Payment.name) private readonly paymentModel: Model<Payment>,
     private readonly userService: UserService,
+    private readonly billService: BillService,
     private readonly productDetailService: ProductDetailService,
   ) {}
   async create(createPaymentDto: CreatePaymentDto) {
